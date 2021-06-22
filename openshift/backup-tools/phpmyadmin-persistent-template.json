@@ -1,0 +1,428 @@
+{
+  "apiVersion": "v1",
+  "kind": "Template",
+  "labels": {
+    "template": "${APP_NAME}"
+  },
+  "message": "The following service(s) have been created in your project: ${DB_NAME}.\n\n       Username: ${MYSQL_USER}\n       Password: ${DB_PASSWORD}\n  Database Name: ${DB_NAME}\n Connection URL: mysql://${DB_NAME}:${DB_PORT}",
+  "metadata": {
+    "annotations": {
+      "description": "PHPMyAdmin",
+      "iconClass": "icon-mysql-database",
+      "openshift.io/display-name": "pma",
+      "tags": "database,pma"
+    },
+    "name": "pma-persistent"
+  },
+  "objects": [
+    {
+			"apiVersion": "v1",
+			"kind": "Secret",
+			"metadata": {
+				"annotations": {
+					"template.openshift.io/expose-database_name": "{.data['database-name']}",
+					"template.openshift.io/expose-password": "{.data['database-password']}",
+					"template.openshift.io/expose-root_password": "{.data['database-root-password']}",
+					"template.openshift.io/expose-username": "{.data['database-user']}"
+				},
+				"name": "${APP_NAME}-secrets"
+			},
+			"stringData": {
+				"database-name": "${DB_NAME}",
+				"database-password": "${DB_PASSWORD}",
+				"database-root-password": "${MYSQL_ROOT_PASSWORD}",
+				"database-user": "${MYSQL_USER}"
+			}
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "${APP_NAME}"
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "${APP_NAME}",
+            "port": 8080
+          }
+        ],
+        "selector": {
+          "deploymentconfig": "${APP_NAME}"
+        }
+      }
+    },
+    {
+			"apiVersion": "v1",
+			"kind": "Route",
+			"metadata": {
+        "name": "${APP_NAME}",
+        "namespace": "${PROJECT_NAMESPACE}",
+        "labels": {
+          "service": "${APP_NAME}"
+        }
+      },
+      "spec": {
+        "host": "${SITE_URL}",
+        "to": {
+          "kind": "Service",
+          "name": "${APP_NAME}",
+          "weight": 100
+        },
+        "conditions": [
+          {
+            "type": "Admitted",
+            "status": "True"
+          }
+        ],
+        "tls": {
+          "termination": "edge",
+          "insecureEdgeTerminationPolicy": "Redirect"
+        },
+        "port": {
+          "targetPort": "${APP_NAME}"
+        },
+        "wildcardPolicy": "None"
+      }
+		},
+    {
+      "apiVersion": "v1",
+      "kind": "PersistentVolumeClaim",
+      "nfs": {
+        "path": "${DATA_MOUNT_PATH}"
+      },
+      "metadata": {
+        "name": "${APP_NAME}-data"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteMany"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "${VOLUME_CAPACITY}"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "DeploymentConfig",
+      "metadata": {
+        "annotations": {
+          "template.alpha.openshift.io/wait-for-ready": "true"
+        },
+        "name": "${APP_NAME}",
+        "namespace": "${PROJECT_NAMESPACE}",
+        "labels": {
+          "service": "${APP_NAME}"
+        }
+      },
+      "spec": {
+        "replicas": 1,
+        "selector": {
+          "deploymentconfig": "${APP_NAME}"
+        },
+        "strategy": {
+          "type": "Rolling",
+          "rollingParams": {
+            "updatePeriodSeconds": 1,
+            "intervalSeconds": 1,
+            "timeoutSeconds": 600,
+            "maxUnavailable": "25%",
+            "maxSurge": "25%"
+          }
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "deploymentconfig": "${APP_NAME}"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "image": "${PMA_BUILD_IMAGE}",
+                "name": "${APP_NAME}",
+                "restartPolicy": "Always",
+                "imagePullPolicy": "Always",
+                "ports": [
+                  {
+                    "containerPort": 8080
+                  }
+                ],
+                "volumeMounts": [
+                  {
+                    "mountPath": "${DATA_MOUNT_PATH}",
+                    "name": "${APP_NAME}-data"
+                  }
+                ],
+                "resources": {
+                  "limits": {
+                    "memory": "${MEMORY_LIMIT}",
+                    "cpu": "500m"
+                  },
+                  "requests": {
+                    "memory": "${MEMORY_LIMIT}",
+                    "cpu": "100m"
+                  }
+                },
+                "env": [
+                  {
+                    "name": "APP_NAME",
+                    "value": "${APP_NAME}"
+                  },
+                  {
+                    "name": "SITE_URL",
+                    "value": "https://${SITE_URL}"
+                  },
+                  {
+                    "name": "MEMORY_LIMIT",
+                    "value": "${MEMORY_LIMIT}"
+                  },
+                  {
+                    "name": "VOLUME_CAPACITY",
+                    "value": "${VOLUME_CAPACITY}"
+                  },
+                  {
+                    "name": "HTTP_PORT",
+                    "value": "${HTTP_PORT}"
+                  },
+                  {
+                    "name": "DB_SERVICE_NAME",
+                    "value": "${DB_SERVICE_NAME}"
+                  },
+                  {
+                    "name": "DB_HOST",
+                    "value": "${DB_HOST}"
+                  },
+                  {
+                    "name": "DB_PORT",
+                    "value": "${DB_PORT}"
+                  },
+                  {
+                    "name": "PROJECT_NAMESPACE",
+                    "value": "${PROJECT_NAMESPACE}"
+                  },
+                  {
+                    "name": "DB_NAME",
+                    "value": "${DB_NAME}"
+                  },
+                  {
+                    "name": "DATA_MOUNT_PATH",
+                    "value": "${DATA_MOUNT_PATH}"
+                  },
+                  {
+                    "name": "MYSQL_USER",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "moodle-secrets",
+                        "key": "database-user"
+                      }
+                    }
+                  },
+                  {
+                    "name": "DB_USER",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "moodle-secrets",
+                        "key": "database-user"
+                      }
+                    }
+                  },
+                  {
+                    "name": "DB_PASSWORD",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "name": "moodle-secrets",
+                        "key": "database-password"
+                      }
+                    }
+                  },
+                  {
+                    "name": "GIT_PROJECT",
+                    "value": "${PMA_BUILD_IMAGE}"
+                  },
+                  {
+                    "name": "UPSTREAM_URI",
+                    "value": "http://moodle:8080"
+                  },
+                  {
+                    "name": "HOST_NAME",
+                    "value": "${HOST_NAME}"
+                  },
+                  {
+                    "name": "PMA_HOSTS",
+                    "value": "${HOST_NAME}"
+                  },
+                  {
+                    "name": "MYSQL_USER",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "database-user",
+                        "name": "${DB_SERVICE_NAME}"
+                      }
+                    }
+                  },
+                  {
+                    "name": "MYSQL_PASSWORD",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "database-password",
+                        "name": "${DB_SERVICE_NAME}"
+                      }
+                    }
+                  },
+                  {
+                    "name": "MYSQL_ROOT_PASSWORD",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "database-root-password",
+                        "name": "${DB_SERVICE_NAME}"
+                      }
+                    }
+                  },
+                  {
+                    "name": "MYSQL_DATABASE",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "database-name",
+                        "name": "${DB_SERVICE_NAME}"
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "${APP_NAME}-data",
+                "persistentVolumeClaim": {
+                  "claimName": "${APP_NAME}-data"
+                }
+              }
+            ]
+          }
+        },
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "revisionHistoryLimit": 10,
+        "test": false
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "description": "Build Image for PHPMyAdmin",
+      "displayName": "Build Image",
+      "name": "PMA_BUILD_IMAGE",
+      "required": true,
+      "value": "${PMA_BUILD_IMAGE}"
+    },{
+      "description": "Connection from PMA to MySQL host",
+      "displayName": "MySQL Host",
+      "name": "HOST_NAME",
+      "required": true,
+      "value": "${HOST_NAME}"
+    },{
+      "description": "Application name.",
+      "displayName": "App Name",
+      "name": "APP_NAME",
+      "required": true,
+      "value": "${APP_NAME}"
+    },
+    {
+      "description": "Website URL.",
+      "displayName": "URL",
+      "name": "SITE_URL",
+      "required": true,
+      "value": "${SITE_URL}"
+    },
+    {
+      "description": "Ports opened for connections to the application from the Internet.",
+      "displayName": "App Port",
+      "name": "HTTP_PORT",
+      "required": true,
+      "value": "${HTTP_PORT}"
+    },
+    {
+      "description": "Database service name.",
+      "displayName": "DB Service Name",
+      "name": "DB_SERVICE_NAME",
+      "required": true,
+      "value": "${DB_SERVICE_NAME}"
+    },
+    {
+      "description": "Database host name.",
+      "displayName": "DB Host",
+      "name": "DB_HOST",
+      "required": true,
+      "value": "${DB_HOST}"
+    },
+    {
+      "description": "Database Port opened for connections from other containers.",
+      "displayName": "DB Port",
+      "name": "DB_PORT",
+      "required": true,
+      "value": "${DB_PORT}"
+    },
+    {
+      "description": "The OpenShift Namespace where the ImageStream resides.",
+      "displayName": "Namespace",
+      "name": "PROJECT_NAMESPACE",
+      "value": "${PROJECT_NAMESPACE}"
+    },
+    {
+      "description": "Name of the MySQL database accessed.",
+      "displayName": "MySQL Database Name",
+      "name": "DB_NAME",
+      "required": true,
+      "value": "${DB_NAME}"
+    },
+    {
+      "description": "Username for MySQL user that will be used for accessing the database.",
+      "displayName": "MySQL Connection Username",
+      "name": "MYSQL_USER",
+      "required": true,
+      "value": "${MYSQL_USER}"
+    },
+    {
+      "description": "Password for MySQL user.",
+      "displayName": "MySQL Connection Password",
+      "name": "MYSQL_PASSWORD",
+      "required": true,
+      "value": "${MYSQL_PASSWORD}"
+    },
+    {
+      "description": "Root password for MySQL",
+      "displayName": "Root MySQL Connection Password",
+      "name": "MYSQL_ROOT_PASSWORD",
+      "required": true,
+      "value": "${MYSQL_ROOT_PASSWORD}"
+    },
+    {
+      "description": "Persistent data mount path",
+      "displayName": "Path to save files (backups)",
+      "name": "DATA_MOUNT_PATH",
+      "required": true,
+      "value": "${DATA_MOUNT_PATH}"
+    },
+    {
+      "description": "Persistent volume data capacity",
+      "displayName": "PV Capacity",
+      "name": "VOLUME_CAPACITY",
+      "required": true,
+      "value": "${VOLUME_CAPACITY}"
+    },
+    {
+      "description": "Server memory limit",
+      "displayName": "Memory Limit",
+      "name": "MEMORY_LIMIT",
+      "required": true,
+      "value": "${MEMORY_LIMIT}"
+    }
+  ]
+}

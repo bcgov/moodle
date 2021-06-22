@@ -1,0 +1,23 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: moodle-cron
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: "Forbid"
+  startingDeadlineSeconds: 180
+  suspend: false
+  successfulHistoryLimit: 6
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            parent: "moodle"
+        spec:
+          containers:
+          - name: moodle
+            image: "warrenchristian1/moodle:latest"
+            command: ["/usr/local/bin/php", "/vendor/moodle/moodle/admin/cli/cron.php"]
+          restartPolicy: OnFailure

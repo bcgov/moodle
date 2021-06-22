@@ -1,0 +1,26 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: |
+      The Network Security Policies (NSP) for the associated
+      Platform Services image builds mechanics.
+  name: security-init
+  namespace: 950003-prod
+objects:
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: internal-to-internal
+    spec:
+      description: All pods can access other pods in the same namespace
+      source:
+        - - '$namespace=950003-prod'
+      destination:
+        - - '$namespace=950003-prod'
+parameters:
+  - name: NAMESPACE
+    description: |
+      The the name of the namespace the policy is being
+      deployed to.
+    required: true
