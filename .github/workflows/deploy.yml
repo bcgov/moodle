@@ -1,36 +1,67 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
-
-# Controls when the workflow will run
+# Static Deploy On Openshift
+# Builds and Deploys merged PR's to persistent pods/services/routes/etc in the OpenShift Dev environment.
+name: Deploy on Openshift
+  
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    # Edit to the branch(es) you want to build and deploy on each push.
+    branches: [ master ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  #Print variables for logging and debugging purposes
+  checkEnv:
+    name: Check Env variables
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Print Env Vars
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          echo Git Base Ref: ${{ github.base_ref }}
+          echo Git Build ID: ${{ github.event.number }}
+          echo Git Pull Request Ref: ${{ github.event.pull_request.head.sha }}
+          echo OC CLI Version: $(oc version)
+  #Build the API
+  build:
+    name: Build and deploy APP to Dev environment
+    runs-on: ubuntu-latest
+    # if: ${{ github.event.pull_request.merged == true}}
+    # env:
+    #   BUILD_ID: ${{ github.event.number }}
+    #   BUILD_NAMESPACE: 332842-tools
+    #   BRANCH: ${{ github.base_ref }}
+    #   #KC_AUTH_URL: https://dev.oidc.gov.bc.ca/auth/
+    env:
+      BUILD_ID: ${{ github.event.number }}
+      NAMESPACE: 950003-dev
+      BUILD_NAMESPACE: 950003-dev
+      BRANCH: master
+      APP: moodle-app
+      APP_HOST: moodle-route-950003-dev.apps.silver.devops.gov.bc.ca
+    steps:
+      # Checkout the PR branch
+      # - name: Print env
+      #   run: |
+      #     echo BUILD ID: $BUILD_ID
+      #     echo BUILD NAMESPACE: $BUILD_NAMESPACE
+      #     echo BRANCH: $BRANCH
+      - name: Checkout Target Branch
+        uses: actions/checkout@v1
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      - name: Log in to OpenShift
+        run: |
+          oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
+      # Build the api images
+      - name: Build and deploy the app
+        run: | 
+          oc project ${NAMESPACE}
+          echo "Current namespace is ${NAMESPACE}"
+          oc start-build bc/moodle-app
+          oc logs -f bc/moodle-app
+          echo "Getting deployment status..."
+          oc rollout status deployment/moodle-app
+          echo "Listing pods.."
+          oc get pods|grep moodle-app
+          export ROUTE="$(oc get route moodle-route -o jsonpath='{.spec.host}')"
+          echo "moodle-app is exposed at $ROUTE"   
