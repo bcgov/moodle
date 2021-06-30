@@ -34,9 +34,9 @@ jobs:
       BUILD_ID: ${{ github.event.number }}
       NAMESPACE: 950003-dev
       BUILD_NAMESPACE: 950003-dev
-      BRANCH: master
-      APP: moodle-app
-      APP_HOST: moodle-route-950003-dev.apps.silver.devops.gov.bc.ca
+      BRANCH: main
+      APP: moodle-beta
+      APP_HOST: moodle-beta-950003-dev.apps.silver.devops.gov.bc.ca
     steps:
       # Checkout the PR branch
       # - name: Print env
@@ -55,13 +55,50 @@ jobs:
       # Build the api images
       - name: Build and deploy the app
         run: | 
-          oc project ${NAMESPACE}
-          echo "Current namespace is ${NAMESPACE}"
-          oc start-build bc/moodle-app
-          oc logs -f bc/moodle-app
-          echo "Getting deployment status..."
-          oc rollout status deployment/moodle-app
+          # oc project ${NAMESPACE}
+          # echo "Current namespace is ${NAMESPACE}"
+          # oc start-build bc/moodle-app
+          # oc logs -f bc/moodle-app
+          # echo "Getting deployment status..."
+          # oc rollout status deployment/moodle-app
+          # echo "Listing pods.."
+          # oc get pods|grep moodle-app
+          # export ROUTE="$(oc get route moodle-route -o jsonpath='{.spec.host}')"
+          # echo "moodle-app is exposed at $ROUTE"   
+
+          test -n "${NAMESPACE}"
+          test -n "${BUILD_NAMESPACE}"
+          test -n "${BRANCH}"
+          echo "Current namespace is $NAMESPACE"
+          # oc -n ${NAMESPACE} process -f openshift/app-template.yaml \
+          #   -p NAME=${APP} \
+          #   -p HOST_NAME=${APP_HOST} \
+          #   -p BUILD_NAMESPACE=${BUILD_NAMESPACE} | oc -n ${NAMESPACE} apply -f -
+          oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template.json \
+              -p APP_NAME=${APP} \
+              -p SITE_URL=${APP_HOST} \
+              -p DB_HOST=moodle-mysql \
+              -p MOODLE_MEMORY_LIMIT=1Gi \
+              -p PROJECT_NAMESPACE=950003-dev \
+              -p DB_SERVICE_NAME=moodle-mysql \
+              -p MOODLE_VOLUME_CAPACITY=10Gi \
+              -p DB_NAME=moodle-mysql \
+              -p DB_USER=moodle-mysql \
+              -p HTTP_PORT=8080 \
+              -p DB_PORT=3306 \
+              -p APACHE_DOCUMENT_ROOT="/vendor/moodle/moodle" \
+              -p SITE_NAME=Moodle \
+              -p DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              -p GIT_PROJECT=moodle \
+              -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
+              -p BUILD_IMAGE="warrenchristian1/moodle:latest" \
+              -p GIT_URL="https://github.com/warrenchristian1telus/moodle.git" \
+              -p GIT_TAG=openshift \
+              -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
+               oc -n ${NAMESPACE} apply -f -
+          oc rollout status dc/${APP}
+          oc project ${NAMESPACE}     
           echo "Listing pods.."
-          oc get pods|grep moodle-app
-          export ROUTE="$(oc get route moodle-route -o jsonpath='{.spec.host}')"
-          echo "moodle-app is exposed at $ROUTE"   
+          oc get pods|grep ${APP}
+          export ROUTE="$(oc get route ${APP} -o jsonpath='{.spec.host}')"
+          echo "${APP} is exposed at 'https://'$ROUTE"   
