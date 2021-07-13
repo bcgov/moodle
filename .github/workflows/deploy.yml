@@ -74,7 +74,7 @@ jobs:
           #   -p NAME=${APP} \
           #   -p HOST_NAME=${APP_HOST} \
           #   -p BUILD_NAMESPACE=${BUILD_NAMESPACE} | oc -n ${NAMESPACE} apply -f -
-          oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template.json \
+          oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template-new.json \
               -p APP_NAME=${APP} \
               -p SITE_URL=${APP_HOST} \
               -p DB_HOST=mysql \
