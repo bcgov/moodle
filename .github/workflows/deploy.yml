@@ -77,18 +77,18 @@ jobs:
           oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template.json \
               -p APP_NAME=${APP} \
               -p SITE_URL=${APP_HOST} \
-              -p DB_HOST=moodle-mysql \
+              -p DB_HOST=mysql \
               -p MOODLE_MEMORY_LIMIT=1Gi \
               -p PROJECT_NAMESPACE=950003-dev \
-              -p DB_SERVICE_NAME=moodle-mysql \
+              -p DB_SERVICE_NAME=mysql \
               -p MOODLE_VOLUME_CAPACITY=10Gi \
               -p DB_NAME=moodle \
-              -p DB_USER=moodle \
+              #-p DB_USER=moodle \
               -p HTTP_PORT=8080 \
               -p DB_PORT=3306 \
               -p APACHE_DOCUMENT_ROOT="/vendor/moodle/moodle" \
               -p SITE_NAME=Moodle \
-              -p DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+              #-p DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
               -p GIT_PROJECT=moodle \
               -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
               -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
@@ -97,9 +97,9 @@ jobs:
               -p GIT_TAG=openshift \
               -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
                oc -n ${NAMESPACE} apply -f -
-          oc rollout status dc/${APP}
+          oc rollout status dc/moodel-beta
           oc project ${NAMESPACE}     
           echo "Listing pods.."
-          oc get pods|grep ${APP}
-          export ROUTE="$(oc get route ${APP} -o jsonpath='{.spec.host}')"
+          oc get pods|grep moodle-beta
+          export ROUTE="$(oc get route moodle-beta -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'$ROUTE"   
