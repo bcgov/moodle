@@ -233,7 +233,7 @@
                     "name": "DB_USER",
                     "valueFrom": {
                       "secretKeyRef": {
-                        "name": "moodle-beta-secrets",
+                        "name": "${APP_NAME}-secrets",
                         "key": "database-user"
                       }
                     }
@@ -242,7 +242,7 @@
                     "name": "DB_PASSWORD",
                     "valueFrom": {
                       "secretKeyRef": {
-                        "name": "moodle-beta-secrets",
+                        "name": "${APP_NAME}-secrets",
                         "key": "database-password"
                       }
                     }
@@ -268,7 +268,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "key": "database-user",
-                        "name": "${DB_SERVICE_NAME}"
+                        "name": "${APP_NAME}-secrets"
                       }
                     }
                   },
@@ -277,7 +277,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "key": "database-password",
-                        "name": "${DB_SERVICE_NAME}"
+                        "name": "${APP_NAME}-secrets"
                       }
                     }
                   },
@@ -286,7 +286,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "key": "database-root-password",
-                        "name": "${DB_SERVICE_NAME}"
+                        "name": "${APP_NAME}-secrets"
                       }
                     }
                   },
@@ -295,7 +295,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "key": "database-name",
-                        "name": "${DB_SERVICE_NAME}"
+                        "name": "${APP_NAME}-secrets"
                       }
                     }
                   }
