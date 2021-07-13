@@ -97,7 +97,7 @@ jobs:
               -p GIT_TAG=openshift \
               -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
                oc -n ${NAMESPACE} apply -f -
-          oc rollout status dc/moodel-beta
+          oc rollout status dc/moodle-beta
           oc project ${NAMESPACE}     
           echo "Listing pods.."
           oc get pods|grep moodle-beta
