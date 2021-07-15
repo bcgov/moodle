@@ -24,7 +24,7 @@ jobs:
   #Build the app
 
   build:
-    name: Build and deploy APP to Dev environment
+    name: Build APP
     runs-on: ubuntu-latest
     # if: ${{ github.event.pull_request.merged == true}}
     env:
@@ -56,7 +56,7 @@ jobs:
           test -n "${BRANCH}"
           test -n "${BUILD_NAMESPACE}"
           echo "BUILIDING ${APP} with tag: ${BUILD_TAG}"
-                oc -n ${BUILD_NAMESPACE} process -f openshift/app/docker-build.yaml \
+                oc -n ${BUILD_NAMESPACE} process -f docker-build.yaml \
                 -p TAG=${BUILD_TAG} -p SOURCE_REPOSITORY_REF=${BRANCH} \
                 -p BASE_IMAGE_NAME="php7.3" -p BASE_IMAGE_TAG="1" \
                 -p BASE_IMAGE_REPO="aro.jfrog.io/moodle/" \
