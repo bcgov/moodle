@@ -58,7 +58,7 @@ jobs:
           echo "BUILIDING ${APP} with tag: ${BUILD_TAG}"
                 oc -n ${BUILD_NAMESPACE} process -f docker-build.yml \
                 -p TAG=${BUILD_TAG} -p SOURCE_REPOSITORY_REF=${BRANCH} \
-                -p BASE_IMAGE_NAME="php7.3" -p BASE_IMAGE_TAG="1" \
+                -p BASE_IMAGE_NAME="php7.3" -p BASE_IMAGE_TAG="2" \
                 -p BASE_IMAGE_REPO="aro.jfrog.io/moodle/" \
                 -p SOURCE_CONTEXT_DIR=moodle \
                 -p NAME=${APP} | oc -n ${BUILD_NAMESPACE} apply -f -
