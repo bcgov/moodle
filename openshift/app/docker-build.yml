@@ -57,8 +57,6 @@ objects:
         git:
           uri: "${SOURCE_REPOSITORY_URL}"
           ref: "${SOURCE_REPOSITORY_REF}"
-        sourceSecret:
-          name: "git-secret"
         type: Git
       strategy:
         dockerStrategy: 
