@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:1.2
-# Build intermediate container to handle Github token
+## Build intermediate container to handle Github token
 FROM aro.jfrog.io/moodle/php:7.3-apache as composer
 
 WORKDIR /
@@ -27,7 +27,7 @@ RUN apt-get update -y && \
 	php -r "unlink('composer-setup.php');" && \
 	rm -vfr /var/lib/apt/lists/*
 
-COPY .ssh/id_rsa /.ssh/id_rsa
+#COPY .ssh/id_rsa /.ssh/id_rsa
 COPY ./composer.json ./composer.json
 
 ARG GITHUB_AUTH_TOKEN=""
@@ -36,8 +36,9 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # Add Github Auth token for Composer build, then install (GITHUB_AUTH_TOKEN.txt should be in root directory and contain the token only)
 RUN --mount=type=secret,id=GITHUB_AUTH_TOKEN \
 	composer config -g github-oauth.github.com $GITHUB_AUTH_TOKEN
-
-RUN composer install --optimize-autoloader --no-interaction --prefer-dist
+RUN apt-get update -y && apt-get install -y unzip
+#RUN composer install --optimize-autoloader --no-interaction --prefer-dist
+RUN COMPOSER_PROCESS_TIMEOUT=2000 composer update --ignore-platform-reqs
 
 
 
@@ -153,7 +154,7 @@ COPY  --chown=www-data:www-data --from=composer /usr/local/bin/composer /usr/loc
 WORKDIR /
 
 # Don't copy .env to OpenShift - use Deployment Config > Environment instead
-COPY .env$ENV_FILE ./.env
+#COPY .env$ENV_FILE ./.env
 
 # COPY /app/config/sync/apache.conf /etc/apache2/sites-enabled/000-default.conf
 COPY --chown=www-data:www-data app/config/sync/apache2.conf /etc/apache2/apache2.conf
@@ -206,10 +207,10 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 
 ## Can only have one CMD, so choose wisely
 # docker
-# ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
+#ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
 # or OpenShift
-# CMD /etc/init.d/apache2 start
+CMD /etc/init.d/apache2 start
 
 # CMD ["cron", "-f"]
 # CMD /etc/init.d/apache2 start
-ENTRYPOINT [ "/etc/init.d/apache2", "start"]
+#ENTRYPOINT [ "/etc/init.d/apache2", "start"]
