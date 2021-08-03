@@ -34,8 +34,8 @@ ARG GITHUB_AUTH_TOKEN
 ENV COMPOSER_MEMORY_LIMIT=-1
 RUN echo "Token value: "$GITHUB_AUTH_TOKEN
 # Add Github Auth token for Composer build, then install (GITHUB_AUTH_TOKEN.txt should be in root directory and contain the token only)
-#RUN --mount=type=secret,id=GITHUB_AUTH_TOKEN \
-#	composer config -g github-oauth.github.com $GITHUB_AUTH_TOKEN
+RUN --mount=type=secret,id=GITHUB_AUTH_TOKEN \
+	composer config -g github-oauth.github.com $GITHUB_AUTH_TOKEN
 RUN apt-get update -y && apt-get install -y unzip
 #RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 RUN COMPOSER_PROCESS_TIMEOUT=2000 composer update --ignore-platform-reqs
