@@ -94,7 +94,7 @@ jobs:
          run: |
            oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
        - name: Build and deploy the app
-  #       run: | 
+         run: | 
   #         # oc project ${NAMESPACE}
   #         # echo "Current namespace is ${NAMESPACE}"
   #         # oc start-build bc/moodle-app
