@@ -65,8 +65,8 @@ jobs:
                 -p NAME=${APP} | oc -n ${BUILD_NAMESPACE} apply -f -
           oc -n ${BUILD_NAMESPACE} start-build bc/${APP} --wait
   
-   # Deploy App images in Dev
-   deployDev:
+  # Deploy App images in Dev
+  deployDev:
      name: Deploy APP to Dev environment
      runs-on: ubuntu-latest
      env:
