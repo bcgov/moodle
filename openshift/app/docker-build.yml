@@ -64,7 +64,7 @@ objects:
             kind: ImageStreamTag
             name: ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG}
           buildArgs: 
-            - name: ${GITHUB_AUTH_TOKEN}
+            - name: GITHUB_AUTH_TOKEN
             - name: ${ARG_KEY_2}
               value: ${ARG_VAL_2}
             - name: ${ARG_KEY_3}
