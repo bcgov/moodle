@@ -30,7 +30,7 @@ RUN apt-get update -y && \
 #COPY .ssh/id_rsa /.ssh/id_rsa
 COPY ./composer.json ./composer.json
 
-#ARG GITHUB_AUTH_TOKEN=""
+ARG GITHUB_AUTH_TOKEN
 ENV COMPOSER_MEMORY_LIMIT=-1
 RUN echo "Token value: "$GITHUB_AUTH_TOKEN
 # Add Github Auth token for Composer build, then install (GITHUB_AUTH_TOKEN.txt should be in root directory and contain the token only)
