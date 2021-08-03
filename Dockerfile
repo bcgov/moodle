@@ -30,6 +30,7 @@ RUN apt-get update -y && \
 #COPY .ssh/id_rsa /.ssh/id_rsa
 COPY ./composer.json ./composer.json
 
+#Define GitHub Auth Token
 ARG GITHUB_AUTH_TOKEN
 ENV COMPOSER_MEMORY_LIMIT=-1
 RUN echo "Token value: "$GITHUB_AUTH_TOKEN
