@@ -118,7 +118,8 @@ jobs:
                 -p GIT_PROJECT=moodle \
                 -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
                 -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
-                -p BUILD_IMAGE="aro.jfrog.io/moodle/moodle:950003-dev" \
+                -p BUILD_NAMESPACE="950003-tools" \
+                -p IMAGE_STREAM_TAG="moodle-gamma" \
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
