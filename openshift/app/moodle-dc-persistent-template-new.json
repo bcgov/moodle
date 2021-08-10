@@ -366,7 +366,7 @@
       "description": "Image stream tag.",
       "displayName": "Image Stream Tag",
       "required": true,
-      "name": "IMAGE_STREAN_TAG"
+      "name": "IMAGE_STREAM_TAG"
     },
     {
       "description": "Maximum amount of memory the container can use.",
