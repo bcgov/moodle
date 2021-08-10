@@ -73,7 +73,7 @@ jobs:
     env:
       BUILD_ID: ${{ github.event.number }}
       NAMESPACE: 950003-dev
-      BUILD_NAMESPACE: 950003-dev
+      BUILD_NAMESPACE: 950003-tools
       BRANCH: main
       APP: moodle-gamma
       APP_HOST: moodle-gamma-950003-dev.apps.silver.devops.gov.bc.ca
@@ -100,6 +100,7 @@ jobs:
           test -n "${BUILD_NAMESPACE}"
           test -n "${BRANCH}"
           echo "Current namespace is ${NAMESPACE}"
+          oc -n ${BUILD_NAMESPACE} policy add-role-to-group system:image-puller system:serviceaccounts:$$(oc project --short)
           oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template-new.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
