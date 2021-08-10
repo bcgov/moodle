@@ -143,7 +143,7 @@
           "spec": {
             "containers": [
               {
-                "image": "${BUILD_IMAGE}",
+                "image": "${IMAGE_REGISTRY}/${BUILD_NAMESPACE}/${IMAGE_STREAM_TAG}",
                 "name": "${APP_NAME}",
                 "restartPolicy": "Always",
                 "imagePullPolicy": "Always",
@@ -337,13 +337,6 @@
       "value": "${SITE_NAME}"
     },
     {
-      "description": "Build image location.",
-      "displayName": "Build Image",
-      "name": "BUILD_IMAGE",
-      "required": true,
-      "value": "${BUILD_IMAGE}"
-    },
-    {
       "description": "Moodle data path.",
       "displayName": "Moodle Data Path",
       "name": "MOODLE_DATA_PATH",
@@ -356,6 +349,24 @@
       "name": "SITE_URL",
       "required": true,
       "value": "${SITE_URL}"
+    },
+    {
+      "description": "Image registry.",
+      "displayName": "Image Registry",
+      "name": "IMAGE_REGISTRY",
+      "value": "image-registry.openshift-image-registry.svc:5000"	    
+    },
+    {
+      "description": "Build namespace.",
+      "displayName": "Build Namespace",
+      "required": true,
+      "name": "BUILD_NAMESPACE"
+    },
+    {
+      "description": "Image stream tag",
+      "displayName": "Image Stream Tag",
+      "required": true,
+      "name": "IMAGE_STREAN_TAG"
     },
     {
       "description": "Maximum amount of memory the container can use.",
