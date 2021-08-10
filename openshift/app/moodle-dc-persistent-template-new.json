@@ -351,7 +351,7 @@
       "value": "${SITE_URL}"
     },
     {
-      "description": "Image registry.",
+      "description": "Image registry",
       "displayName": "Image Registry",
       "name": "IMAGE_REGISTRY",
       "value": "image-registry.openshift-image-registry.svc:5000"	    
