@@ -363,7 +363,7 @@
       "name": "BUILD_NAMESPACE"
     },
     {
-      "description": "Image stream tag",
+      "description": "Image stream tag.",
       "displayName": "Image Stream Tag",
       "required": true,
       "name": "IMAGE_STREAN_TAG"
