@@ -207,9 +207,9 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 
 ## Can only have one CMD, so choose wisely
 # docker
-#ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
+ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
 # or OpenShift
-CMD /etc/init.d/apache2 start
+#CMD /etc/init.d/apache2 start
 
 # CMD ["cron", "-f"]
 # CMD /etc/init.d/apache2 start
