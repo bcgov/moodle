@@ -154,7 +154,7 @@ COPY  --chown=www-data:www-data --from=composer /usr/local/bin/composer /usr/loc
 WORKDIR /
 
 # Don't copy .env to OpenShift - use Deployment Config > Environment instead
-#COPY .env$ENV_FILE ./.env
+COPY .env$ENV_FILE ./.env
 
 # COPY /app/config/sync/apache.conf /etc/apache2/sites-enabled/000-default.conf
 COPY --chown=www-data:www-data app/config/sync/apache2.conf /etc/apache2/apache2.conf
