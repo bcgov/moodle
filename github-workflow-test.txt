@@ -1,2 +1,3 @@
 #Frequent Changes will be made in this file to test GA workflow
 1. Test email notification on successful run
+2. Test installation of package mysqli
