@@ -2,3 +2,4 @@
 1. Test email notification on successful run
 2. Test installation of package mysqli
 3. Running build to test GA
+4. Add new line
