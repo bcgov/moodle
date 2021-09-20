@@ -123,6 +123,9 @@ RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
 		sysvshm \
 	; \
 	\
+	docker-php-ext-enable mysqli \
+	; \
+	\
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
 	apt-mark auto '.*' > /dev/null; \
 	apt-mark manual $savedAptMark; \
@@ -186,7 +189,8 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 # Add custom theme
 # COPY app/config/sync/moodle/theme/bcgov /vendor/moodle/moodledata/theme/bcgov
 # RUN chown -R www-data:www-data /vendor/moodle/moodledata/theme/bcgov
-
+#Enable mysqli
+RUN docker-php-ext-enable mysqli
 
 #
 # Add Cron Job for maintenance tasks
