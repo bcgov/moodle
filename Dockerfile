@@ -189,8 +189,9 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 # Add custom theme
 # COPY app/config/sync/moodle/theme/bcgov /vendor/moodle/moodledata/theme/bcgov
 # RUN chown -R www-data:www-data /vendor/moodle/moodledata/theme/bcgov
-#Enable mysqli
-#RUN docker-php-ext-enable mysqli
+#Install and Enable mysqli
+RUN docker-php-ext-install mysqli && \
+      docker-php-ext-enable mysqli
 
 #
 # Add Cron Job for maintenance tasks
