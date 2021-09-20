@@ -11,7 +11,7 @@ $CFG = new stdClass();
 
 $CFG->dbtype    = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = (isset($_ENV['DB_HOST'])) ? $_ENV['DB_HOST'] : 'moodle-mysql';
+$CFG->dbhost    = (isset($_ENV['DB_HOST'])) ? $_ENV['DB_HOST'] : 'mysql';
 $CFG->dbname    = (isset($_ENV['DB_NAME'])) ? $_ENV['DB_NAME'] : 'moodle';
 $CFG->dbuser    = (isset($_ENV['DB_USER'])) ? $_ENV['DB_USER'] : 'moodle';
 $CFG->dbpass    = (isset($_ENV['DB_PASSWORD'])) ? $_ENV['DB_PASSWORD'] : '';
