@@ -104,7 +104,7 @@ jobs:
           oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template-new.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
-                -p DB_HOST=mysql-0.mysql \
+                -p DB_HOST=mysql \
                 -p DB_SECONDARY_NAME=mysql-read \
                 -p MOODLE_MEMORY_LIMIT=1Gi \
                 -p PROJECT_NAMESPACE=950003-dev \
