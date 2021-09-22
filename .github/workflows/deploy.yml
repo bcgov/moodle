@@ -105,6 +105,7 @@ jobs:
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
                 -p DB_HOST=mysql \
+                -p DB_SECONDARY_NAME=mysql-read \
                 -p MOODLE_MEMORY_LIMIT=1Gi \
                 -p PROJECT_NAMESPACE=950003-dev \
                 -p DB_SERVICE_NAME=mysql \
