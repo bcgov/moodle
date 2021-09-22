@@ -11,7 +11,7 @@ $CFG = new stdClass();
 
 $CFG->dbtype    = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = (isset($_ENV['DB_HOST'])) ? $_ENV['DB_HOST'] : 'mysql-0.mysql';
+$CFG->dbhost    = (isset($_ENV['DB_HOST'])) ? $_ENV['DB_HOST'] : 'mysql';
 $CFG->dbname    = (isset($_ENV['DB_NAME'])) ? $_ENV['DB_NAME'] : 'moodle';
 $CFG->dbuser    = (isset($_ENV['DB_USER'])) ? $_ENV['DB_USER'] : 'moodle';
 $CFG->dbpass    = (isset($_ENV['DB_PASSWORD'])) ? $_ENV['DB_PASSWORD'] : '';
@@ -23,7 +23,7 @@ $CFG->dboptions = array (
   'dbcollation' => 'utf8mb4_unicode_ci',
 );
 
-$CFG->wwwroot   = (isset($_ENV['SITE_URL'])) ? $_ENV['SITE_URL'] : 'http://localhost:8080';
+$CFG->wwwroot   = (isset($_ENV['SITE_URL'])) ? $_ENV['SITE_URL'] : 'https://moodle-gamma-950003-dev.apps.silver.devops.gov.bc.ca';
 $CFG->dataroot  = (isset($_ENV['MOODLE_DATA_PATH'])) ? $_ENV['MOODLE_DATA_PATH'] : '/vendor/moodle/moodledata/persistent';
 // $CFG->themedir  = (isset($_ENV['MOODLE_DATA_MOUNT_PATH'])) ? $_ENV['MOODLE_DATA_MOUNT_PATH'].'/theme' : '/vendor/moodle/moodledata/theme';
 $CFG->admin     = 'admin';
