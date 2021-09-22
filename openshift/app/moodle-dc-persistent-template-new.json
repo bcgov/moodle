@@ -209,6 +209,11 @@
                     "name": "DB_HOST",
                     "value": "${DB_HOST}"
                   },
+		  {
+                    "name": "DB_SECONDARY_NAME",
+                    "value": "${DB_SECONDARY_NAME}"
+                  },
+
                   {
                     "name": "DB_PORT",
                     "value": "${DB_PORT}"
@@ -417,6 +422,14 @@
       "required": true,
       "value": "${DB_HOST}"
     },
+    {
+      "description": "Database secondary host name.",
+      "displayName": "DB Secondary Host",
+      "name": "DB_SECONDARY_NAME",
+      "required": true,
+      "value": "${DB_SECONDARY_NAME}"
+    },
+
     {
       "description": "Database Port opened for connections from other containers.",
       "displayName": "DB Port",
