@@ -126,6 +126,7 @@ jobs:
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
           oc -n ${NAMESPACE} apply -f -
+          oc rollout dc/${APP}
           # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
           ATTEMPTS=0
           ROLLOUT_STATUS_CMD="oc rollout status dc/moodle-gamma -n ${NAMESPACE}"
