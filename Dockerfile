@@ -204,8 +204,9 @@ RUN docker-php-ext-enable gd && \
     soap
 
      
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-configure intl
+
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 
 #
 # Add Cron Job for maintenance tasks
