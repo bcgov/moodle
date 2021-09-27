@@ -192,21 +192,57 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 #Install and Enable mysqli
 RUN docker-php-ext-install mysqli && \
       docker-php-ext-enable mysqli
-RUN docker-php-ext-install gd && \
-    intl && \
-    zip && \
-    xmlrpc && \
-    soap
-RUN docker-php-ext-enable gd && \
-    intl && \
-    zip  && \
-    xmlrpc && \
-    soap
 
      
-RUN docker-php-ext-configure intl
+ENV PHP_EXTENSIONS="mysqli xmlrpc soap zip bcmath bz2 exif ftp gd gettext intl opcache shmop sysvmsg sysvsem sysvshm"
 
+#RUN docker-php-ext-install $PHP_EXTENTIONS  && \
+#    docker-php-ext-enable $PHP_EXTENTIONS
+RUN apt-get install libxml2-dev -y
+RUN apt-get install libzip-dev -y
+RUN apt-get update && apt-get install -y libbz2-dev
+
+RUN apt-get install cron -y
+RUN apt-get install libfreetype6-dev -y
+RUN apt-get install libjpeg-dev \libpng-dev -y
+RUN apt-get install libpq-dev -y
+RUN apt-get install libssl-dev -y
+RUN apt-get install ca-certificates -y
+RUN apt-get install libcurl4-openssl-dev -y
+RUN apt-get install libgd-tools -y
+RUN apt-get install libmcrypt-dev -y
+RUN apt-get install zip -y
+RUN apt-get install default-mysql-client -y
+RUN apt-get install vim -y
+RUN apt-get install wget -y
+RUN apt-get install libbz2-dev -y
+
+RUN docker-php-ext-install xmlrpc
+RUN docker-php-ext-install soap
+RUN docker-php-ext-install zip
+RUN docker-php-ext-install bcmath
+RUN docker-php-ext-install bz2
+RUN docker-php-ext-install exif
+RUN docker-php-ext-install ftp
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install gettext
+RUN docker-php-ext-install intl
+RUN docker-php-ext-install opcache
+RUN docker-php-ext-install shmop
+RUN docker-php-ext-install sysvmsg
+RUN docker-php-ext-install sysvsem
+RUN docker-php-ext-install sysvshm
+
+RUN docker-php-ext-enable gd
+RUN docker-php-ext-enable intl
+RUN docker-php-ext-enable mysqli
+RUN docker-php-ext-enable soap
+RUN docker-php-ext-enable xmlrpc
+RUN docker-php-ext-enable zip
+
+RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+
 
 #
 # Add Cron Job for maintenance tasks
