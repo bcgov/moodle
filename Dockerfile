@@ -192,6 +192,20 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 #Install and Enable mysqli
 RUN docker-php-ext-install mysqli && \
       docker-php-ext-enable mysqli
+RUN docker-php-ext-install gd && \
+    intl && \
+    zip && \
+    xmlrpc && \
+    soap
+RUN docker-php-ext-enable gd && \
+    intl && \
+    zip  && \
+    xmlrpc && \
+    soap
+
+     
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-configure intl
 
 #
 # Add Cron Job for maintenance tasks
