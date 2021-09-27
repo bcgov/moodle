@@ -40,12 +40,12 @@ RUN apt-get update -y && apt-get install -y unzip
 #RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 RUN COMPOSER_PROCESS_TIMEOUT=2000 composer update --ignore-platform-reqs
 
-Add plugins (try to add these via composer later)
-RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger &&
-mkdir -p /vendor/moodle/moodle/mod/facetoface &&
-mkdir -p /vendor/moodle/moodle/mod/hvp &&
-chown -R www-data:www-data /vendor/moodle/moodle/admin/tool/ &&
-chown -R www-data:www-data /vendor/moodle/moodle/mod/
+#Add plugins (try to add these via composer later)
+RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
+    mkdir -p /vendor/moodle/moodle/mod/facetoface && \
+    mkdir -p /vendor/moodle/moodle/mod/hvp && \
+    chown -R www-data:www-data /vendor/moodle/moodle/admin/tool/ && \
+    chown -R www-data:www-data /vendor/moodle/moodle/mod/
 
 RUN git clone https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger
 RUN git clone https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
