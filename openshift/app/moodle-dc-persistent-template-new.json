@@ -149,7 +149,7 @@
                 "imagePullPolicy": "Always",
                 "livenessProbe": {
                   "httpGet": {
-                    "path": "https://https://moodle-gamma-950003-dev.apps.silver.devops.gov.bc.ca/admin/cron.php?password=%2B%3DCRONpa33w0rd",
+                    "path": "https://moodle-gamma-950003-dev.apps.silver.devops.gov.bc.ca/admin/cron.php?password=%2B%3DCRONpa33w0rd",
                     "port": 8080,
                     "scheme": "HTTP"
                   },
