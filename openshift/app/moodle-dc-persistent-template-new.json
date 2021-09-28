@@ -168,6 +168,20 @@
                     "cpu": "100m"
                   }
                 },
+                {
+                  "livenessProbe": {
+                    "httpGet": {
+                      "path": "https://moodle-gamma-950003-dev.apps.silver.devops.gov.bc.ca/admin/cron.php?password=%2B%3DCRONpa33w0rd",
+                      "port": 8080,
+                      "scheme": "HTTP"
+                    },
+                    "initialDelaySeconds": 90,
+                    "timeoutSeconds": 30,
+                    "periodSeconds": 60,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
+                  }
+                }.
                 "env": [
                   {
                     "name": "APP_NAME",
