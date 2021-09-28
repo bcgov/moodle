@@ -49,7 +49,7 @@ RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
 
 RUN git clone https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger
 RUN git clone https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
-RUN git clone https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp
+RUN git clone https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && cd /vendor/moodle/moodle/mod/hvp && git submodule update --init
 
 
 
