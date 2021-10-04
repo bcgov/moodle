@@ -53,8 +53,8 @@ RUN git clone https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moo
 RUN git clone https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
 RUN git clone https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && cd /vendor/moodle/moodle/mod/hvp && git submodule update --init
 
-ADD https://moodle.org/plugins/download.php/25138/theme_adaptable_moodle39_2020073111.zip /tmp/adaptable
-RUN unzip -d /vendor/moodle/moodle/theme/adaptable /tmp/adaptable/theme_adaptable_moodle39_2020073111.zip
+ADD https://moodle.org/plugins/download.php/25138/theme_adaptable_moodle39_2020073111.zip /tmp/theme_adaptable.zip
+RUN unzip -d /vendor/moodle/moodle/theme/adaptable /tmp/theme_adaptable.zip
 
 ##################################################
 ##################################################
