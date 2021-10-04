@@ -331,6 +331,21 @@
         "triggers": [
           {
             "type": "ConfigChange"
+          },
+	  {
+          "type": "ImageChange": [
+		"ImageChangeParams": [
+		{
+			"automatic": true,
+			"from": [
+				"kind": "ImageStreamTag",
+				"name": "${IMAGE_REGISTRY}/${BUILD_NAMESPACE}/${IMAGE_STREAM_TAG}"
+			],
+			"containerNames": [
+				"moodle"
+			]
+		}]
+	]
           }
         ],
         "revisionHistoryLimit": 10,
