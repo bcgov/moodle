@@ -44,14 +44,17 @@ RUN COMPOSER_PROCESS_TIMEOUT=2000 composer update --ignore-platform-reqs
 RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     mkdir -p /vendor/moodle/moodle/mod/facetoface && \
     mkdir -p /vendor/moodle/moodle/mod/hvp && \
+    mkdir -p /vendor/moodle/moodle/theme/adaptable && \
     chown -R www-data:www-data /vendor/moodle/moodle/admin/tool/ && \
-    chown -R www-data:www-data /vendor/moodle/moodle/mod/
+    chown -R www-data:www-data /vendor/moodle/moodle/mod/ && \
+    chown -R www-data:www-data /vendor/moodle/moodle/theme
 
 RUN git clone https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger
 RUN git clone https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
 RUN git clone https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && cd /vendor/moodle/moodle/mod/hvp && git submodule update --init
 
-
+RUN git clone https://moodle.org/plugins/download.php/25138/theme_adaptable_moodle39_2020073111.zip /tmp/adaptable
+RUN unzip -d /vendor/moodle/moodle/theme/adaptable /tmp/adaptable/theme_adaptable_moodle39_2020073111.zip
 
 ##################################################
 ##################################################
