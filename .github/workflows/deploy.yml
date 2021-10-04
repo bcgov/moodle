@@ -63,7 +63,7 @@ jobs:
                 -p GITHUB_AUTH_TOKEN=${{secrets.AUTH_TOKEN}} \
                 -p SOURCE_CONTEXT_DIR=. \
                 -p NAME=${APP} | oc -n ${BUILD_NAMESPACE} apply -f -
-          oc -n ${BUILD_NAMESPACE} start-build bc/${APP} --wait
+          oc -n ${BUILD_NAMESPACE} start-build bc/${APP} --no-cache --wait
 
 
   # Deploy App images in Dev
