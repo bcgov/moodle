@@ -1,3 +1,5 @@
+UPDATE 2
+
 {
   "apiVersion": "v1",
   "kind": "Template",
@@ -17,23 +19,23 @@
   },
   "objects": [
     {
-			"apiVersion": "v1",
-			"kind": "Secret",
-			"metadata": {
-				"annotations": {
-					"template.openshift.io/expose-database_name": "{.data['database-name']}",
-					"template.openshift.io/expose-password": "{.data['database-password']}",
-					"template.openshift.io/expose-root_password": "{.data['database-root-password']}",
-					"template.openshift.io/expose-username": "{.data['database-user']}"
-				},
-				"name": "${APP_NAME}-secrets"
-			},
-			"stringData": {
-				"database-name": "${DB_NAME}",
-				"database-password": "${DB_PASSWORD}",
-				"database-root-password": "${DB_ROOT_PASSWORD}",
-				"database-user": "${DB_USER}"
-			}
+        "apiVersion": "v1",
+        "kind": "Secret",
+        "metadata": {
+            "annotations": {
+                "template.openshift.io/expose-database_name": "{.data['database-name']}",
+                "template.openshift.io/expose-password": "{.data['database-password']}",
+                "template.openshift.io/expose-root_password": "{.data['database-root-password']}",
+                "template.openshift.io/expose-username": "{.data['database-user']}"
+            },
+            "name": "${APP_NAME}-secrets"
+        },
+        "stringData": {
+            "database-name": "${DB_NAME}",
+            "database-password": "${DB_PASSWORD}",
+            "database-root-password": "${DB_ROOT_PASSWORD}",
+            "database-user": "${DB_USER}"
+        }
     },
     {
       "apiVersion": "v1",
@@ -54,16 +56,16 @@
       }
     },
     {
-			"apiVersion": "v1",
-			"kind": "Route",
-			"metadata": {
+    "apiVersion": "v1",
+	"kind": "Route",
+	"metadata": {
         "name": "${APP_NAME}",
         "namespace": "${PROJECT_NAMESPACE}",
         "labels": {
           "service": "${APP_NAME}"
         }
-      },
-      "spec": {
+    },
+    "spec": {
         "host": "${SITE_URL}",
         "to": {
           "kind": "Service",
@@ -332,21 +334,20 @@
           {
             "type": "ConfigChange"
           },
-	  {
-		"type": "ImageChange",
-		 "imageChangeParams": {
-		   "automatic": true,
-		   "containerNames": [
-		    "moodle"
-		 ],
-		 "from": [
-			 "kind": "ImageStreamTag",
-			 "name": "${IMAGE_REGISTRY}/${BUILD_NAMESPACE}/${IMAGE_STREAM_TAG}"
-		  ],
-		  "tag": "latest"
-		 }
-	  }
-        ],
+	      {
+		    "type": "ImageChange",
+            "imageChangeParams": {
+                "automatic": true,
+                "containerNames": [
+                    "moodle"
+                ],
+                "from": [
+                    "kind": "ImageStreamTag",
+                    "name": "${IMAGE_REGISTRY}/${BUILD_NAMESPACE}/${IMAGE_STREAM_TAG}"
+                ],
+                "tag": "latest"
+            }
+	    },
         "revisionHistoryLimit": 10,
         "test": false
       }
