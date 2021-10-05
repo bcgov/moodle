@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "moodle/moodle": "^3.9.10",
+    "moodle/moodle": ">=3.9.10 <3.10",
     "vlucas/phpdotenv": "^5.3"
   }
 }
