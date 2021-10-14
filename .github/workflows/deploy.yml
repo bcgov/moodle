@@ -144,7 +144,7 @@ jobs:
 
           
   # Deploy App images in Prod
-  deployDev:
+  deployProd:
     name: Deploy APP to Prod environment
     runs-on: ubuntu-latest
     environment: PROD
