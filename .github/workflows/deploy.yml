@@ -147,6 +147,7 @@ jobs:
   deployDev:
     name: Deploy APP to Prod environment
     runs-on: ubuntu-latest
+    environment: PROD
     env:
       BUILD_ID: ${{ github.event.number }}
       NAMESPACE: 950003-prod
