@@ -216,11 +216,12 @@ jobs:
           oc project ${NAMESPACE}     
           echo "Listing pods.."
           oc get pods|grep moodle-gamma
+          sleep 30
           oc get pods -l deploymentconfig=moodle-gamma --field-selector=status.phase=Running -o name
-          # podNames="oc get pods --selector=deploymentconfig=moodle-gamma -o name"
-          # echo $podNames
-          # for name in $podNames; do
-          #   oc exec $podNames -- sed -i 's/dev/prod/g' .env
-          # done
+          podNames="oc get pods -l deploymentconfig=moodle-gamma --field-selector=status.phase=Running -o name"
+          echo $podNames
+          for name in $podNames; do
+            oc exec $podNames -- sed -i 's/dev/prod/g' .env
+          done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
