@@ -218,7 +218,7 @@ jobs:
           oc get pods|grep moodle-gamma
           sleep 30
           oc get pods -l deploymentconfig=moodle-gamma --field-selector=status.phase=Running -o name
-          podNames="oc get pods -l deploymentconfig=moodle-gamma --field-selector=status.phase=Running -o name"
+          podNames=$(oc get pods -l deploymentconfig=moodle-gamma --field-selector=status.phase=Running -o name)
           echo $podNames
           for name in $podNames; do
             oc exec $podNames -- sed -i 's/dev/prod/g' .env
