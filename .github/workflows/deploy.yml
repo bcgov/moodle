@@ -217,7 +217,6 @@ jobs:
           echo "Listing pods.."
           oc get pods|grep moodle-gamma
           podNames="oc get pods --selector=deploymentconfig=moodle-gamma -o name"
-          echo "Getting" $podNames...
           echo $podNames
           for name in $podNames; do
             oc exec $podNames -- sed -i 's/dev/prod/g' .env
