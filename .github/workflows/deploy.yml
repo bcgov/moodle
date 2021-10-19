@@ -216,7 +216,7 @@ jobs:
           oc project ${NAMESPACE}     
           echo "Listing pods.."
           oc get pods|grep moodle-gamma
-          oc get pods -l deploymentconfig=moodle-gamma -o name
+          oc get pods -l deploymentconfig=moodle-gamma --field-selector=status.phase=Running -o name
           # podNames="oc get pods --selector=deploymentconfig=moodle-gamma -o name"
           # echo $podNames
           # for name in $podNames; do
