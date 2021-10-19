@@ -77,8 +77,8 @@ jobs:
       BRANCH: main
       APP: moodle-gamma
       APP_HOST: moodle-gamma-950003-dev.apps.silver.devops.gov.bc.ca
-    needs:
-      - build
+    #needs:
+    #  - build
     steps:
        # - name: Print env
        #   run: |
