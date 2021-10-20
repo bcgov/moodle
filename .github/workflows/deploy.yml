@@ -229,6 +229,7 @@ jobs:
           echo $podNames
           for name in $podNames; do
             #oc exec $podNames -- sed -i 's/dev/prod/g' .env
+            podNames=$(cut -d'/' -f2 $podNames)
             oc cp .env $podNames:/.env
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
