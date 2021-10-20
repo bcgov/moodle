@@ -232,8 +232,10 @@ jobs:
           for name in $podNames; do
             #oc exec $podNames -- sed -i 's/dev/prod/g' .env
             podNames=$(echo $podNames|cut -d'/' -f2)
-            #oc cp .env $podNames:/.env --no-preserve=true
-            oc rsync $(pwd) $podNames:/ --exclude=* --include=.env --no-perms
+            oc cp .env $podNames:/tmp/new.env
+            oc exec $podNames -- mv/tmp/new.env /.env
+
+            #oc rsync $(pwd) $podNames:/ --exclude=* --include=.env --no-perms
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
