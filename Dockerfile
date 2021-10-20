@@ -212,6 +212,7 @@ ENV PHP_EXTENSIONS="mysqli xmlrpc soap zip bcmath bz2 exif ftp gd gettext intl o
 
 #RUN docker-php-ext-install $PHP_EXTENTIONS  && \
 #    docker-php-ext-enable $PHP_EXTENTIONS
+RUN apt-get install sudo -y
 RUN apt-get install libxml2-dev -y
 RUN apt-get install libzip-dev -y
 RUN apt-get update && apt-get install -y libbz2-dev
