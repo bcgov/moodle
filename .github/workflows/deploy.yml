@@ -233,7 +233,7 @@ jobs:
             #oc exec $podNames -- sed -i 's/dev/prod/g' .env
             podNames=$(echo $podNames|cut -d'/' -f2)
             oc cp .env $podNames:/tmp/new.env
-            oc exec $podNames -- mv/tmp/new.env /.env
+            oc exec $podNames -- mv tmp/new.env /.env
 
             #oc rsync $(pwd) $podNames:/ --exclude=* --include=.env --no-perms
           done
