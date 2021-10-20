@@ -229,7 +229,7 @@ jobs:
           echo $podNames
           for name in $podNames; do
             #oc exec $podNames -- sed -i 's/dev/prod/g' .env
-            oc cp .env ${NAMESPACE}/$podNames:/.env
+            oc cp .env $podNames:/.env
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
