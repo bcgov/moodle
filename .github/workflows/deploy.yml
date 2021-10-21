@@ -231,8 +231,8 @@ jobs:
           echo $podNames
           for name in $podNames; do
             oc exec -i $podNames -- /bin/bash -s <<EOF
-              #!/bin/bash
-              echo "hello"
+            #!/bin/bash
+            echo "hello"
             EOF
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
