@@ -230,7 +230,7 @@ jobs:
           ls -lrt .env
           echo $podNames
           for name in $podNames; do
-            oc exec $podNames -- sudo sed -i 's/dev/prod/g' .env
+            oc exec $podNames -- sed -i 's/dev/prod/g' .env
             #podNames=$(echo $podNames|cut -d'/' -f2)
             #oc cp .env $podNames:/tmp/new.env
             #oc exec $podNames -- mv tmp/new.env /.env
