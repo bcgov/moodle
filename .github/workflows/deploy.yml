@@ -230,7 +230,7 @@ jobs:
           ls -lrt .env
           echo $podNames
           for name in $podNames; do
-            oc exec $podNames -- bash -c "fileContent=$(cat .env) && \
+            oc exec $podNames -- bash -c "fileContent=$(cat .env) && echo $fileContent && \
             newFileContent=$(echo $fileContent|sed 's/dev.apps.silver.devops.gov.bc.ca/prod.apps.silver.devops.gov.bc.ca/g') && \
             echo "newfilecontent is " $newFileContent && \
             #echo $newFileContent > .env"
