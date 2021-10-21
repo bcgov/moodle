@@ -232,8 +232,7 @@ jobs:
           for name in $podNames; do
             oc exec $podNames -- bash -c "fileContent=$(cat .env) && echo $fileContent && \
             newFileContent=$(echo $fileContent|sed 's/dev.apps.silver.devops.gov.bc.ca/prod.apps.silver.devops.gov.bc.ca/g') && \
-            echo "newfilecontent is " $newFileContent && \
-            #echo $newFileContent > .env"
+            echo newfilecontent is $newFileContent"
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
