@@ -192,8 +192,8 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 	chmod -R g=u /vendor/moodle/moodledata/persistent && \
 	chown -R www-data:www-data /vendor/moodle/moodledata/persistent && \
 	chown -R www-data:www-data /vendor/moodle/moodledata/persistent && \
-	chgrp -R 0 / && \
-    chmod -R g=u /
+	chgrp -R 0 /.env && \
+    chmod -R g=u /.env
 
 # chown -R www-data:www-data $VENDOR && \
 # chown -R www-data:www-data /usr/local/etc/php/php.ini && \
