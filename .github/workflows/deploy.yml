@@ -230,10 +230,10 @@ jobs:
           ls -lrt .env
           echo $podNames
           for name in $podNames; do
-            oc exec $podNames -- bash -c "fileContent=$(cat .env) && newFileContent=$(echo $fileContent|sed 's/dev/prod/g') && \
-            echo $newFileContent && \
-            rm .env && \
-            echo $newFileContent > .env"
+            oc exec $podNames -- bash -c "fileContent=$(cat .env) && \
+            newFileContent=$(echo $fileContent|sed 's/dev.apps.silver.devops.gov.bc.ca/prod.apps.silver.devops.gov.bc.ca/g') && \
+            echo "newfilecontent is " $newFileContent && \
+            #echo $newFileContent > .env"
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
