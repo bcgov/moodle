@@ -231,6 +231,8 @@ jobs:
           echo $podNames
           for name in $podNames; do
             oc exec $podNames -- bash -c "fileContent=$(cat .env) && newFileContent=$(echo $fileContent|sed 's/dev/prod/g') && \
+            echo $newFileContent && \
+            rm .env && \
             echo $newFileContent > .env"
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
