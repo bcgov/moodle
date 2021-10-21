@@ -258,6 +258,11 @@ RUN docker-php-ext-enable zip
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 
+
+RUN chgrp -R 0 / && \
+    chmod -R g=u /
+USER 1001
+
 #
 # Add Cron Job for maintenance tasks
 #
