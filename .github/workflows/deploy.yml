@@ -230,10 +230,8 @@ jobs:
           ls -lrt .env
           echo $podNames
           for name in $podNames; do
-            oc exec -i $podNames -- /bin/bash -s <<EOF
-            #!/bin/bash
-            echo "hello"
-            EOF
+            oc exec $podNames -- bash -c "echo hello && \
+            echo Kunal"
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
