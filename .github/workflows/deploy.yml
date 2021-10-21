@@ -235,6 +235,7 @@ jobs:
             fileContent=$(cat .env)
             newFileContent=$(cat $fileContent|sed 's/dev/prod/g')
             echo $newFileContent > .env
+            EOF
             #podNames=$(echo $podNames|cut -d'/' -f2)
             #oc cp .env $podNames:/tmp/new.env
             #oc exec $podNames -- mv tmp/new.env /.env
