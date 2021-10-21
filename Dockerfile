@@ -191,7 +191,9 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 	chgrp -R 0 /vendor/moodle/moodledata/persistent && \
 	chmod -R g=u /vendor/moodle/moodledata/persistent && \
 	chown -R www-data:www-data /vendor/moodle/moodledata/persistent && \
-	chown -R www-data:www-data /vendor/moodle/moodledata/persistent
+	chown -R www-data:www-data /vendor/moodle/moodledata/persistent && \
+	chgrp -R 0 / && \
+    chmod -R g=u /
 
 # chown -R www-data:www-data $VENDOR && \
 # chown -R www-data:www-data /usr/local/etc/php/php.ini && \
@@ -257,11 +259,6 @@ RUN docker-php-ext-enable zip
 
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-
-
-RUN chgrp -R 0 / && \
-    chmod -R g=u /
-USER 1001
 
 #
 # Add Cron Job for maintenance tasks
