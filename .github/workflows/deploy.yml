@@ -230,17 +230,12 @@ jobs:
           ls -lrt .env
           echo $podNames
           for name in $podNames; do
-            oc exec $podNames -- /bin/bash -s <<EOF
+            oc exec -i $podNames -- /bin/bash -s <<EOF
             #!/bin/bash
             fileContent=$(cat .env)
             newFileContent=$(cat $fileContent|sed 's/dev/prod/g')
             echo $newFileContent > .env
             EOF
-            #podNames=$(echo $podNames|cut -d'/' -f2)
-            #oc cp .env $podNames:/tmp/new.env
-            #oc exec $podNames -- mv tmp/new.env /.env
-
-            #oc rsync $(pwd) $podNames:/ --exclude=* --include=.env --no-perms
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
