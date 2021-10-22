@@ -233,7 +233,7 @@ jobs:
             oc exec $podNames -- /bin/sh -c "date && \
               echo 1 && \
               echo 2 && \
-              filecontent=Kunal && \
+              set filecontent=Kunal && \
               echo $filecontent"
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
