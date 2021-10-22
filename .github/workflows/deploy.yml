@@ -232,7 +232,9 @@ jobs:
           for name in $podNames; do
             oc exec $podNames -- /bin/sh -c "date && \
               echo 1 && \
-              echo 2"
+              echo 2 && \
+              filecontent=Kunal && \
+              echo $filecontent"
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
