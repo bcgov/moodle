@@ -233,7 +233,9 @@ jobs:
             oc exec $podNames -- sh -c "date && \
               echo 1 && \
               echo 2 && \
-              cat .env"
+              cat .env && \
+              echo $(cat .env)"
+              #echo "${foo//dev.apps/prod.apps}""
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
