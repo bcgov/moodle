@@ -230,10 +230,10 @@ jobs:
           ls -lrt .env
           echo $podNames
           for name in $podNames; do
-            oc exec $podNames -- /bin/sh -c "date && \
+            oc exec $podNames -- sh -c "date && \
               echo 1 && \
               echo 2 && \
-              set filecontent=Kunal && \
+              filecontent=Kunal && \
               echo $filecontent"
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
