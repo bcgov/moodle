@@ -233,7 +233,7 @@ jobs:
             oc exec $podNames -- sh -c "date && \
               echo 1 && \
               echo 2 && \
-              (filecontent=Kunal; echo $fileContent)"
+              (filecontent=Kunal; (filecontent=Kapoor; echo $fileContent))"
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
