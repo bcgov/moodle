@@ -234,7 +234,9 @@ jobs:
               echo 1 && \
               echo 2 && \
               cat .env && \
-              echo $(cat .env)"
+              echo $(cat .env) && \
+              sed '/SITE_URL/d' .env && \
+              echo 'SITE_URL="https://moodle-gamma-950003-prod.apps.silver.devops.gov.bc.ca"' >> .env"
               #echo "${foo//dev.apps/prod.apps}""
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
