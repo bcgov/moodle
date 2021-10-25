@@ -234,9 +234,9 @@ jobs:
               cat << EOF > .env
               DB_PASSWORD=rbBjP4dn*sLu7r9zm&yPczZNc
               SSL_PROXY=true
-              SITE_URL="https://moodle-gamma-950003-prod.apps.silver.devops.gov.bc.ca"
-              DB_HOST="mysql-0.mysql"
-              \EOF
+              SITE_URL=https://moodle-gamma-950003-prod.apps.silver.devops.gov.bc.ca
+              DB_HOST=mysql-0.mysql
+              EOF
               "
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
