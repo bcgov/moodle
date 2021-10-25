@@ -236,7 +236,8 @@ jobs:
               SSL_PROXY=true
               SITE_URL="https://moodle-gamma-950003-prod.apps.silver.devops.gov.bc.ca"
               DB_HOST="mysql-0.mysql"
-              EOF"
+              \EOF
+              "
           done
           export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
