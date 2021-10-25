@@ -232,7 +232,7 @@ jobs:
           for name in $podNames; do
             oc exec $podNames -- bash -c "
               cat <<- EOF > .env
-              DB_PASSWORD=rbBjP4dn*sLu7r9zm&yPczZNc
+              DB_PASSWORD=${{ secrets.DB_PASSWORD }}
               SSL_PROXY=true
               SITE_URL=https://moodle-gamma-950003-prod.apps.silver.devops.gov.bc.ca
               DB_HOST=mysql-0.mysql
