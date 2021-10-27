@@ -32,7 +32,7 @@ jobs:
       BUILD_NAMESPACE: 950003-tools
       BRANCH: main
       BUILD_TAG: latest
-      APP: moodle-gamma
+      APP: moodle
       #KC_AUTH_URL: https://dev.oidc.gov.bc.ca/auth/
     steps:
       # Checkout the PR branch
@@ -75,8 +75,8 @@ jobs:
       NAMESPACE: 950003-dev
       BUILD_NAMESPACE: 950003-tools
       BRANCH: main
-      APP: moodle-gamma
-      APP_HOST: moodle-gamma-950003-dev.apps.silver.devops.gov.bc.ca
+      APP: moodle
+      APP_HOST: moodle-950003-dev.apps.silver.devops.gov.bc.ca
     needs:
       - build
     steps:
@@ -121,15 +121,15 @@ jobs:
                 -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
                 -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
                 -p BUILD_NAMESPACE="950003-tools" \
-                -p IMAGE_STREAM_TAG="moodle-gamma:latest" \
+                -p IMAGE_STREAM_TAG="moodle:latest" \
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
           oc -n ${NAMESPACE} apply -f -
-          oc rollout latest dc/moodle-gamma -n ${NAMESPACE}
+          oc rollout latest dc/moodle -n ${NAMESPACE}
           # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
           ATTEMPTS=0
-          ROLLOUT_STATUS_CMD="oc rollout status dc/moodle-gamma -n ${NAMESPACE}"
+          ROLLOUT_STATUS_CMD="oc rollout status dc/moodle -n ${NAMESPACE}"
           until $ROLLOUT_STATUS_CMD || [ $ATTEMPTS -eq 60 ]; do
             $ROLLOUT_STATUS_CMD
             ATTEMPTS=$((attempts + 1))
@@ -137,8 +137,8 @@ jobs:
           done
           oc project ${NAMESPACE}     
           echo "Listing pods.."
-          oc get pods|grep moodle-gamma
-          export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
+          oc get pods|grep moodle
+          export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
 
 
@@ -153,8 +153,8 @@ jobs:
       NAMESPACE: 950003-prod
       BUILD_NAMESPACE: 950003-tools
       BRANCH: main
-      APP: moodle-gamma
-      APP_HOST: moodle-gamma-950003-prod.apps.silver.devops.gov.bc.ca
+      APP: moodle
+      APP_HOST: moodle-950003-prod.apps.silver.devops.gov.bc.ca
     needs:
       - deployDev
     steps:
@@ -199,15 +199,15 @@ jobs:
                 -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
                 -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
                 -p BUILD_NAMESPACE="950003-tools" \
-                -p IMAGE_STREAM_TAG="moodle-gamma:latest" \
+                -p IMAGE_STREAM_TAG="moodle:latest" \
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
           oc -n ${NAMESPACE} apply -f -
-          oc rollout latest dc/moodle-gamma -n ${NAMESPACE}
+          oc rollout latest dc/moodle -n ${NAMESPACE}
           # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
           ATTEMPTS=0
-          ROLLOUT_STATUS_CMD="oc rollout status dc/moodle-gamma -n ${NAMESPACE}"
+          ROLLOUT_STATUS_CMD="oc rollout status dc/moodle -n ${NAMESPACE}"
           until $ROLLOUT_STATUS_CMD || [ $ATTEMPTS -eq 60 ]; do
             $ROLLOUT_STATUS_CMD
             ATTEMPTS=$((attempts + 1))
@@ -215,15 +215,15 @@ jobs:
           done
           oc project ${NAMESPACE}     
           echo "Listing pods.."
-          oc get pods|grep moodle-gamma
+          oc get pods|grep moodle
           sleep 30
-          oc get pods -l deploymentconfig=moodle-gamma --field-selector=status.phase=Running -o name
+          oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name
           sleep 20
-          podNames=$(oc get pods -l deploymentconfig=moodle-gamma --field-selector=status.phase=Running -o name)
+          podNames=$(oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name)
           # cat <<EOF >> .env
           # DB_PASSWORD="{{ secrets.DB_PASSWORD }}"
           # SSL_PROXY=true
-          # SITE_URL="https://moodle-gamma-950003-prod.apps.silver.devops.gov.bc.ca"
+          # SITE_URL="https://moodle-950003-prod.apps.silver.devops.gov.bc.ca"
           # DB_HOST="mysql-0.mysql"
           # EOF
           pwd
@@ -234,9 +234,9 @@ jobs:
               cat <<- EOF > .env
               DB_PASSWORD=${{ secrets.DB_PASSWORD }}
               SSL_PROXY=true
-              SITE_URL=https://moodle-gamma-950003-prod.apps.silver.devops.gov.bc.ca
+              SITE_URL=https://moodle-950003-prod.apps.silver.devops.gov.bc.ca
               DB_HOST=mysql-0.mysql
               `EOF` "
           done
-          export ROUTE="$(oc get route moodle-gamma -o jsonpath='{.spec.host}')"
+          export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
