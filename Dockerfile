@@ -31,7 +31,7 @@ RUN apt-get update -y && \
 	rm -vfr /var/lib/apt/lists/*
 
 #COPY .ssh/id_rsa /.ssh/id_rsa
-COPY ./composer.phpdotenv.json ./composer.json
+COPY ./composer.json ./composer.json
 
 ARG GITHUB_AUTH_TOKEN=""
 ENV COMPOSER_MEMORY_LIMIT=-1
