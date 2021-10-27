@@ -1,21 +1,35 @@
 {
+
   "name": "bcdevops/moodle",
-  "description": "Moodle installation for Docker to OpenShift Build",
+
+  "description": "PHP DotEnv Installation for Moodle",
+
   "license": "GPL-3.0",
+
   "type": "composer-plugin",
+
   "authors": [
+
     {
+
       "name": "BCDevOps"
+
     }
+
   ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/moodle/moodle.git"
-    }
-  ],
+
+  "minimum-stability": "stable",
+
   "require": {
-    "moodle/moodle": "3.9.*",
-    "vlucas/phpdotenv": "^5.3"
+
+    "vlucas/phpdotenv": "*"
+
+  },
+
+  "config": {
+
+    "process-timeout": 0
+
   }
+
 }
