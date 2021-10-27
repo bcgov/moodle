@@ -45,7 +45,7 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 # Add plugins (try to add these via composer later)
 RUN mkdir -p /vendor/moodle
 
-RUN git clone --recurse-submodules --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
+RUN git clone --recurse-submodules --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle-version
 
 RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     mkdir -p /vendor/moodle/moodle/mod/facetoface && \
@@ -228,5 +228,5 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 # COPY --chown=www-data:www-data app/config/sync/moodle/plugins/admin/tool/. /vendor/moodle/moodle/admin/tool
 
 
- ENTRYPOINT [ "/etc/init.d/apache2", "start"]
+ENTRYPOINT [ "/etc/init.d/apache2", "start"]
 
