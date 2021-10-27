@@ -194,8 +194,8 @@ COPY --chown=www-data:www-data app/config/sync/web-root.htaccess /vendor/moodle/
 COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/local/etc/php/php.ini
 
 # Use ONE of these - High Availability (-ha-readonly) or standard
-COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
-# COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
+#COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
+COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
 RUN if [ "$ENV_FILE" != ".local" ] ; then \
     echo NOT LOCAL ENVIRONEMNT; \
