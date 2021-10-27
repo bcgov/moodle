@@ -45,7 +45,7 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 # Add plugins (try to add these via composer later)
 #RUN mkdir -p /vendor/moodle
 
-RUN git clone --recurse-submodules --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle-version
+RUN git clone --recurse-submodules --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
 
 RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     mkdir -p /vendor/moodle/moodle/mod/facetoface && \
