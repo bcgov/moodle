@@ -228,5 +228,6 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
 # COPY --chown=www-data:www-data app/config/sync/moodle/plugins/admin/tool/. /vendor/moodle/moodle/admin/tool
 
 
-ENTRYPOINT [ "/etc/init.d/apache2", "start"]
+#ENTRYPOINT [ "/etc/init.d/apache2", "start"]
+ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
 
