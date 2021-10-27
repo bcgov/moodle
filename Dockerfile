@@ -43,7 +43,7 @@ composer config -g github-oauth.github.com $GITHUB_AUTH_TOKEN
 RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 
 # Add plugins (try to add these via composer later)
-RUN mkdir -p /vendor/moodle
+#RUN mkdir -p /vendor/moodle
 
 RUN git clone --recurse-submodules --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle-version
 
