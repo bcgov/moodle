@@ -5,6 +5,7 @@ FROM aro.jfrog.io/moodle/php:7.3-apache as composer
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 ENV MOODLE_BRANCH_VERSION MOODLE_39_STABLE
 ENV F2F_BRANCH_VERSION main
+ENV HVP_BRANCH_VERSION stable
 WORKDIR /
 
 RUN apt-get update -y && \
@@ -56,7 +57,7 @@ RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
 
 RUN git clone --recurse-submodules https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger
 RUN git clone --recurse-submodules --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
-RUN git clone --recurse-submodules https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp
+RUN git clone --recurse-submodules --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp
 
 # RUN git submodule update --init
 
