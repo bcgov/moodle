@@ -20,7 +20,7 @@ $CFG->dboptions = array (
   'dbpersist' => 0,
   'dbport' => (isset($_ENV['DB_PORT'])) ? intval($_ENV['DB_PORT']) : 3306,
   'dbsocket' => '',
-  'dbcollation' => 'utf8mb4_unicode_ci',
+  'dbcollation' => 'latin1_swedish_ci',
 );
 
 $CFG->wwwroot   = (isset($_ENV['SITE_URL'])) ? $_ENV['SITE_URL'] : 'https://moodle-gamma-950003-dev.apps.silver.devops.gov.bc.ca';
