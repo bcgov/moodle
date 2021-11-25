@@ -57,7 +57,7 @@ jobs:
           oc -n ${BUILD_NAMESPACE} process -f docker-build.yml \
           -p NAME=${DB_BACKUP_APP} \
           -p TAG=${BUILD_TAG} \
-          -p BASE_IMAGE_NAME="mysql \
+          -p BASE_IMAGE_NAME="mysql" \
           -p BASE_IMAGE_TAG="5.7" \
           -p BASE_IMAGE_REPO="aro.jfrog.io/performance-app/" \
           -p SOURCE_REPOSITORY_URL="https://github.com/BCDevOps/backup-container.git" \
