@@ -124,7 +124,6 @@ jobs:
           -p NAME=${DB_BACKUP_APP} \
           -p IMAGE_STREAM_TAG=${DB_BACKUP_APP}:latest \
           -p BUILD_NAMESPACE=${BUILD_NAMESPACE} \
-          -p BUILD_ID=${BUILD_ID} \
           -p DB_NAME=${DB_NAME}  | oc -n $(NAMESPACE) apply -f -
           oc rollout latest dc/{DB_BACKUP_APP} -n ${NAMESPACE}
 
