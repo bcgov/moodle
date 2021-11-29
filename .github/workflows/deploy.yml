@@ -129,7 +129,7 @@ jobs:
           -p BUILD_NAMESPACE=${BUILD_NAMESPACE} \
           -p DB_NAME=${DB_NAME}  | oc -n ${NAMESPACE} apply -f -
           sleep 30
-          oc rollout latest dc/{DB_BACKUP_APP} -n ${NAMESPACE}
+          oc rollout latest dc/db-backup -n ${NAMESPACE}
           # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
           ATTEMPTS=0
           ROLLOUT_STATUS_CMD="oc rollout status dc/db-backup -n ${NAMESPACE}"
