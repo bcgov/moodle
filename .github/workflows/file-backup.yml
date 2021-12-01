@@ -2,7 +2,7 @@ name: Run file backups for Moodle
 
 on:
   schedule:
-    - cron: '30 16 * * *'
+    - cron: '19 18 * * *'
 jobs:
   fileBackup:
     name: Trigger file backups
@@ -23,7 +23,7 @@ jobs:
           podNames=$(oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name)
           echo $podNames
           for name in $podNames; do
-            oc rsync $podNames:/vendor/moodle/moodledata/persistent/filedir /tmp
-            oc rsync $podNames:/vendor/moodle/moodledata/persistent/models /tmp
+            oc rsync $podNames:/vendor/moodle/moodledata/persistent/filedir /tmp/
+            oc rsync $podNames:/vendor/moodle/moodledata/persistent/models /tmp/
             ls -lrt /tmp
           done
