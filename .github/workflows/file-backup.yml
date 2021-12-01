@@ -1,0 +1,28 @@
+name: Run file backups for Moodle
+
+on:
+  schedule:
+    # Runs "at minute 55 past every hour" (see https://crontab.guru)
+    - cron: '30 6 * * *'
+jobs:
+  fileBackup:
+    name: Trigger file backups
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: main
+      APP: moodle
+      DB_BACKUP_APP: db-backup
+      NAMESPACE: 950003-dev
+    steps:
+      - name: Log in to OpenShift
+        run: |
+          oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
+      - name: Run file backups
+        run: |
+          echo "Current namespace is ${NAMESPACE}"
+          podNames=$(oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name)
+          echo $podNames
+          for name in $podNames; do
+            oc rsync $podNames:/vendor/moodle/moodledata/persistent/filedir /tmp
+            oc rsync $podNames:/vendor/moodle/moodledata/persistent/models /tmp
+          done
