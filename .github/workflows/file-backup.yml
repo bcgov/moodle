@@ -2,7 +2,7 @@ name: Run file backups for Moodle
 
 on:
   schedule:
-    - cron: '19 18 * * *'
+    - cron: '20 18 * * *'
 jobs:
   fileBackup:
     name: Trigger file backups
