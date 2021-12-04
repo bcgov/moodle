@@ -3,9 +3,12 @@
 FROM aro.jfrog.io/moodle/php:7.3-apache as composer
 
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
+
+# Version control for Moodle and plugins
 ENV MOODLE_BRANCH_VERSION MOODLE_11_STABLE
 ENV F2F_BRANCH_VERSION MOODLE_11_STABLE
 ENV HVP_BRANCH_VERSION stable
+
 WORKDIR /
 
 RUN apt-get update -y && \
