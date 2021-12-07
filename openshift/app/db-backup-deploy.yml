@@ -133,7 +133,7 @@ parameters:
   - name: NAME
     required: true
   - name: PROJECT 
-    value: court-interpreter-scheduling
+    value: Moodle
   - name: SERVICE_NAME
     value: db-backup
   - name: CPU_LIMIT
@@ -180,7 +180,7 @@ parameters:
     required: false
     value: moodle
   - name: ENVIRONMENT_FRIENDLY_NAME
-    value: moodle (Dev)
+    value: moodle
   - name: DATA_VOLUME_SIZE
     required: true
     value: 5Gi
