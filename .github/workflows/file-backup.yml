@@ -31,8 +31,8 @@ jobs:
           for name in $podNames; do
             oc exec $podNames -- bash -c "
               mkdir -p /tmp/file-backups && \
-              tar -zcvf filedir-$(date "+%Y.%m.%d-%H.%M.%S").tar.gz /vendor/moodle/moodledata/persistent/filedir && \
-              mv filedir-*.tar.gz /tmp/file-backups && \
+              tar -zcvf /tmp/filedir-$(date "+%Y.%m.%d-%H.%M.%S").tar.gz /vendor/moodle/moodledata/persistent/filedir && \
+              mv /tmp/filedir-*.tar.gz /tmp/file-backups && \
               cp /vendor/moodle/moodledata/persistent/filedir/warning.txt /tmp/file-backups
               "
           done
