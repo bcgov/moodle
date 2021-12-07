@@ -2,7 +2,7 @@ name: Run file backups for Moodle
 
 on:
   schedule:
-    - cron: '04 07 * * *'
+    - cron: '33 07 * * *'
 jobs:
   fileBackup:
     name: Trigger file backups
@@ -30,7 +30,7 @@ jobs:
 
           for name in $podNames; do
             oc exec $podNames -- bash -c "
-              mkdir -p /file-backups && \
-              cp /vendor/moodle/moodledata/persistent/filedir/warning.txt /file-backups
+              mkdir -p /tmp/file-backups && \
+              cp /vendor/moodle/moodledata/persistent/filedir/warning.txt /tmp/file-backups
               "
           done
