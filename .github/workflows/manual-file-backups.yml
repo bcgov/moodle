@@ -24,7 +24,6 @@ jobs:
 
           for name in $podNames; do
             oc exec $podNames -- bash -c "
-              apt update && \
               mkdir -p /tmp/file-backups-new && \
               rsync /vendor/moodle/moodledata/persistent/filedir/warning.txt /tmp/file-backups
               "
