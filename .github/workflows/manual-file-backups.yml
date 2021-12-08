@@ -24,7 +24,9 @@ jobs:
 
           for name in $podNames; do
             oc exec $podNames -- bash -c "
-               apt install rsync && \
+              apt update && apt install sudo
+              sudo apt-get update && \
+              sudo apt install rsync && \
               mkdir -p /tmp/file-backups-new && \
               rsync /vendor/moodle/moodledata/persistent/filedir/warning.txt /tmp/file-backups
               "
