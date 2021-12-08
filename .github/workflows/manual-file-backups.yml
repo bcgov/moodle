@@ -1,0 +1,30 @@
+name: Run file backups for Moodle
+
+on:
+  workflow_dispatch:
+jobs:
+  fileBackup:
+    name: Trigger file backups
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: main
+      APP: moodle
+      DB_BACKUP_APP: db-backup
+      NAMESPACE: 950003-dev
+    steps:
+      - name: Log in to OpenShift
+        run: |
+          oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
+      - name: Run file backups
+        run: |
+          oc project ${NAMESPACE}
+          echo "Current namespace is ${NAMESPACE}"
+          podNames=$(oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name)
+          echo $podNames
+
+          for name in $podNames; do
+            oc exec $podNames -- bash -c "
+              mkdir -p /tmp/file-backups-new && \
+              rsync /vendor/moodle/moodledata/persistent/filedir/warning.txt /tmp/file-backups
+              "
+          done
