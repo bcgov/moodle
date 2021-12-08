@@ -127,6 +127,9 @@ RUN apt-get install libxml2-dev -y
 RUN apt-get install libzip-dev -y
 RUN apt-get update && apt-get install -y libbz2-dev
 
+#Install rsync
+RUN apt-get install rsync -y
+
 RUN apt-get install cron -y
 RUN apt-get install libfreetype6-dev -y
 RUN apt-get install libjpeg-dev \libpng-dev -y
