@@ -25,6 +25,7 @@ jobs:
           for name in $podNames; do
             oc exec $podNames -- bash -c "
               mkdir -p /tmp/file-backups && \
-              rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-950003-dev-$(date "+%Y.%m.%d-%H.%M.%S")
+              namespace=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+              rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-$namespace-$(date "+%Y.%m.%d-%H.%M.%S")
               "
           done
