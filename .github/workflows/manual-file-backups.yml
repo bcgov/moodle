@@ -12,6 +12,8 @@ jobs:
       DB_BACKUP_APP: db-backup
       NAMESPACE: 950003-dev
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Log in to OpenShift
         run: |
           oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
