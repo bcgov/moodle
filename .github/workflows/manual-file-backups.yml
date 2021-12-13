@@ -27,7 +27,7 @@ jobs:
           for name in $podNames; do
             oc exec $podNames -- bash -c "
               mkdir -p /tmp/file-backups && \
-              find /tmp/file-backups/ -name 'filedir*' -maxdepth 1 -mmin +15 -type d -exec rm -rfv && \
+              find /tmp/file-backups/ -name 'filedir*' -maxdepth 1 -mmin +15 -type d -exec rm -rv && \
               rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-$namespace-$(date "+%Y.%m.%d-%H.%M.%S")
               "
           done
