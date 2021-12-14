@@ -30,6 +30,6 @@ jobs:
               find /tmp/file-backups/ -name 'filedir*' -maxdepth 1 -mmin +30 -type d -exec rm -rv  {} \; && \
               namespace=$(eval env|grep PROJECT_NAMESPACE|cut -d'=' -f2)
               eval echo $namespace
-              rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-$namespace-$(date "+%Y.%m.%d-%H.%M.%S")
+              rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-$(eval echo $PROJECT_NAMESPACE)-$(date "+%Y.%m.%d-%H.%M.%S")
               "
           done
