@@ -7,14 +7,13 @@ jobs:
     name: Trigger file backups
     strategy:
       fail-fast: false
+      #Run file backups for multiple environments
       matrix:
         namespace: [950003-dev, 950003-test]
     runs-on: ubuntu-latest
     env:
       BRANCH: main
       APP: moodle
-      DB_BACKUP_APP: db-backup
-      NAMESPACE: 950003-dev
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,6 +27,8 @@ jobs:
           podNames=$(oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name)
           echo $podNames
           
+          #Backup moodledata to a backup PVC pointing to /tmp/file-backups
+          #Purge backups older than n days to reclaim space
           for name in $podNames; do
             oc exec $podNames -- bash -c "
               mkdir -p /tmp/file-backups && \
