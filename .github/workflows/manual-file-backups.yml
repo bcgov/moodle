@@ -34,7 +34,7 @@ jobs:
               mkdir -p /tmp/file-backups && \
               find /tmp/file-backups/ -name 'filedir*' -maxdepth 1 -mmin +30 -type d -exec rm -rv  {} \; && \
               namespace=$(eval env|grep PROJECT_NAMESPACE|cut -d'=' -f2) && \
-              echo "PROJECT NAMESPACE is: " $PROJECT_NAMESPACE && \
+              echo 'PROJECT NAMESPACE is: ' $PROJECT_NAMESPACE && \
               rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-$(eval env|grep PROJECT_NAMESPACE|cut -d'=' -f2)-$(date "+%Y.%m.%d-%H.%M.%S")
               "
           done
