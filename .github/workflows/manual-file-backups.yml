@@ -23,8 +23,8 @@ jobs:
           oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
       - name: Run file backups
         run: |
-          oc project $${{ matrix.namespace }}
-          echo "Current namespace is $${{ matrix.namespace }}"
+          oc project ${{ matrix.namespace }}
+          echo "Current namespace is ${{ matrix.namespace }}"
           podNames=$(oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name)
           echo $podNames
           
