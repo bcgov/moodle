@@ -28,8 +28,8 @@ jobs:
             oc exec $podNames -- bash -c "
               mkdir -p /tmp/file-backups && \
               find /tmp/file-backups/ -name 'filedir*' -maxdepth 1 -mmin +30 -type d -exec rm -rv  {} \; && \
-              export namespace=$(env|grep PROJECT_NAMESPACE|cut -d'=' -f2)
+              namespace=$(eval env|grep PROJECT_NAMESPACE|cut -d'=' -f2)
               echo $namespace
-              rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-$(env|grep PROJECT_NAMESPACE|cut -d'=' -f2)-$(date "+%Y.%m.%d-%H.%M.%S")
+              rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-$namespace-$(date "+%Y.%m.%d-%H.%M.%S")
               "
           done
