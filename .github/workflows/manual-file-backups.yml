@@ -5,6 +5,10 @@ on:
 jobs:
   fileBackup:
     name: Trigger file backups
+    strategy:
+      fail-fast: false
+      matrix:
+        namespace: [950003-dev, 950003-test]
     runs-on: ubuntu-latest
     env:
       BRANCH: main
@@ -19,11 +23,11 @@ jobs:
           oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
       - name: Run file backups
         run: |
-          oc project ${NAMESPACE}
-          echo "Current namespace is ${NAMESPACE}"
+          oc project $${{ matrix.namespace }}
+          echo "Current namespace is $${{ matrix.namespace }}"
           podNames=$(oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name)
           echo $podNames
-
+          
           for name in $podNames; do
             oc exec $podNames -- bash -c "
               mkdir -p /tmp/file-backups && \
