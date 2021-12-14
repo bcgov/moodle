@@ -31,7 +31,7 @@ objects:
     data:
       backup.conf: |
         mysql/moodle
-        0 2 * * * default ./backup.sh -s
+        0 9 * * * default ./backup.sh -s
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     metadata:
