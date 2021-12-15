@@ -14,6 +14,7 @@ jobs:
     env:
       BRANCH: main
       APP: moodle
+      NO_OF_DAYS: +5
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,13 +29,12 @@ jobs:
           echo $podNames
           
           #Backup moodledata to a backup PVC pointing to /tmp/file-backups
-          #Purge backups older than n days to reclaim space
+          #Purge backups older than NO_OF_DAYS to reclaim space
           for name in $podNames; do
             oc exec $podNames -- bash -c "
               mkdir -p /tmp/file-backups && \
               find /tmp/file-backups/ -name 'filedir*' -maxdepth 1 -mmin +30 -type d -exec rm -r  {} \; && \
-              env|grep PROJECT_NAMESPACE|cut -d'=' -f2 && \
               echo 'PROJECT NAMESPACE is: '  ${{ matrix.namespace }} && \
-              rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-$(eval env|grep PROJECT_NAMESPACE|cut -d'=' -f2)-$(date "+%Y.%m.%d-%H.%M.%S")
+              rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S")
               "
           done
