@@ -96,8 +96,8 @@ jobs:
       APP_HOST: moodle-950003-dev.apps.silver.devops.gov.bc.ca
       DB_BACKUP_APP: db-backup
       DB_NAME: moodle
-    needs:
-      - build
+    # needs:
+    #   - build
     steps:
        # - name: Print env
        #   run: |
