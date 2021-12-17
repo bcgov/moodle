@@ -107,6 +107,24 @@
       }
     },
     {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "file-backup-data"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteMany"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "${BACKUP_VOLUME_SIZE}"
+          }
+        },
+        "storageClassName": "netapp-file-backup"
+      }
+    },
+    {
       "apiVersion": "v1",
       "kind": "DeploymentConfig",
       "metadata": {
@@ -168,6 +186,10 @@
                   {
                     "mountPath": "${MOODLE_DATA_MOUNT_PATH}",
                     "name": "${APP_NAME}-data"
+                  },
+                  {
+                    "mountPath": "/tmp/file-backups",
+                    "name": "file-backup-data"
                   }
                 ],
                 "resources": {
@@ -398,6 +420,13 @@
       "name": "MOODLE_VOLUME_CAPACITY",
       "required": true,
       "value": "${MOODLE_VOLUME_CAPACITY}"
+    },
+    {
+      "description": "Volume for storing file backups",
+      "displayName": "Moodle File backups",
+      "name": "BACKUP_VOLUME_SIZE",
+      "required": true,
+      "value": "${BACKUP_VOLUME_SIZE}"
     },
     {
       "description": "Path where the persistent volume will be mounted",
