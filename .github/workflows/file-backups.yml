@@ -38,6 +38,6 @@ jobs:
               mkdir -p /tmp/file-backups && \
               find /tmp/file-backups/ -name 'filedir*' -o -name 'models*' -maxdepth 1 -mtime ${NO_OF_DAYS} -type d -exec rm -r  {} \; && \
               echo 'PROJECT NAMESPACE is: '  ${{ matrix.namespace }} && \
-              tar -zcf /tmp/file-backups/filedir-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").tar.gz /vendor/moodle/moodledata/persistent/filedir && \
+              tar -zcf /tmp/file-backups/filedir-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").tar.gz /vendor/moodle/moodledata/persistent/filedir
               "
           done
