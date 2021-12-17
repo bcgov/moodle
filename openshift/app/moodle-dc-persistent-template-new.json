@@ -341,6 +341,12 @@
                 }
               },
               {
+                "name": "file-backup-data",
+                "persistentVolumeClaim": {
+                  "claimName": "file-backup-data"
+                }
+              },
+              {
                 "name": "${APP_NAME}-config",
                 "configMap": {
                   "name": "${APP_NAME}-config",
