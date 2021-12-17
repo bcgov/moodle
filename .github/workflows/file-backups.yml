@@ -35,7 +35,7 @@ jobs:
           for name in $podNames; do
             oc exec $podNames -- bash -c "
               mkdir -p /tmp/file-backups && \
-              find /tmp/file-backups/ -name 'filedir*' -maxdepth 1 -mtime ${NO_OF_DAYS} -type d -exec rm -r  {} \; && \
+              find /tmp/file-backups/ -name 'filedir*' -o -name 'models*' -maxdepth 1 -mtime ${NO_OF_DAYS} -type d -exec rm -r  {} \; && \
               echo 'PROJECT NAMESPACE is: '  ${{ matrix.namespace }} && \
               rsync -r /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S") && \
               rsync -r /vendor/moodle/moodledata/persistent/models/ /tmp/file-backups/models-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S")
