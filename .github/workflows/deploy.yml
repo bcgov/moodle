@@ -44,12 +44,9 @@ jobs:
           echo BRANCH: $BRANCH
       - name: Checkout Target Branch
         uses: actions/checkout@v1
-      # Update the Dockerfile entrypoint
-      - name: Update entrypoint
-        run: sed -i 's/CMD sh \/backup.sh/CMD \/backup.sh/g' Dockerfile
-      Log in to OpenShift.
-      Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
-      PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
+      # Log in to OpenShift.
+      # Note: The secrets needed to log in are NOT available if the PR comes from a FORK.
+      # PR's must originate from a branch off the original repo or else all openshift `oc` commands will fail.
       - name: Log in to OpenShift
         run: |
           oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
