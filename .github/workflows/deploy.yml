@@ -154,7 +154,7 @@ jobs:
                 -p PROJECT_NAMESPACE=950003-dev \
                 -p DB_SERVICE_NAME=mysql-0.mysql \
                 -p MOODLE_VOLUME_CAPACITY=10Gi \
-                -p BACKUP_VOLUME_SIZE=2Gi \
+                -p BACKUP_VOLUME_SIZE=25Gi \
                 -p DB_NAME=moodle \
                 -p DB_USER=moodle \
                 -p HTTP_PORT=8080 \
@@ -257,7 +257,7 @@ jobs:
                 -p PROJECT_NAMESPACE=950003-test\
                 -p DB_SERVICE_NAME=mysql-0.mysql \
                 -p MOODLE_VOLUME_CAPACITY=10Gi \
-                -p BACKUP_VOLUME_SIZE=2Gi \
+                -p BACKUP_VOLUME_SIZE=25Gi \
                 -p DB_NAME=moodle \
                 -p DB_USER=moodle \
                 -p HTTP_PORT=8080 \
