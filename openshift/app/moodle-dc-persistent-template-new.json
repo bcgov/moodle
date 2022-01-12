@@ -125,6 +125,23 @@
       }
     },
     {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "env-data"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteMany"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "250Mi"
+          }
+        }
+      }
+    },
+    {
       "apiVersion": "v1",
       "kind": "DeploymentConfig",
       "metadata": {
@@ -190,6 +207,11 @@
                   {
                     "mountPath": "/tmp/file-backups",
                     "name": "file-backup-data"
+                  },
+                  {
+                    "mountPath": "/.env",
+                    "name": "env-data",
+                    "subPath": ".env"
                   }
                 ],
                 "resources": {
@@ -351,6 +373,12 @@
                 "configMap": {
                   "name": "${APP_NAME}-config",
                   "defaultMode": 420
+                }
+              },
+              {
+                "name": "env-data",
+                "persistentVolumeClaim": {
+                  "claimName": "env-data"
                 }
               }
             ]
