@@ -207,11 +207,6 @@
                   {
                     "mountPath": "/tmp/file-backups",
                     "name": "file-backup-data"
-                  },
-                  {
-                    "mountPath": "/",
-                    "name": "env-data",
-                    "subPath": ".env"
                   }
                 ],
                 "resources": {
