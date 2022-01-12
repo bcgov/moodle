@@ -209,7 +209,7 @@
                     "name": "file-backup-data"
                   },
                   {
-                    "mountPath": "/.env",
+                    "mountPath": "/",
                     "name": "env-data",
                     "subPath": ".env"
                   }
