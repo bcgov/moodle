@@ -248,8 +248,8 @@ jobs:
           test -n "${BRANCH}"
           echo "Current namespace is ${NAMESPACE}"
           #oc -n ${BUILD_NAMESPACE} policy add-role-to-group system:image-puller system:serviceaccounts:${NAMESPACE}
-          oc policy add-role-to-group view system:serviceaccounts:950003-dev -n ${NAMESPACE} 
-          oc policy add-role-to-group edit system:serviceaccounts:950003-dev -n ${NAMESPACE} 
+          #oc policy add-role-to-group view system:serviceaccounts:950003-dev -n ${NAMESPACE} 
+          #oc policy add-role-to-group edit system:serviceaccounts:950003-dev -n ${NAMESPACE} 
           oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template-new.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
