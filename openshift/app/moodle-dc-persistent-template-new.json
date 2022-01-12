@@ -568,6 +568,13 @@
       "name": "GITHUB_AUTH_TOKEN",
       "required": true,
       "value": "${GITHUB_AUTH_TOKEN}"
-    }
+    },
+    {
+      "description": "Cron Password",
+      "displayName": "Cron Password",
+      "name": "CRON_PASSWORD",
+      "required": true,
+      "value": "${CRON_PASSWORD}"
+    },
   ]
 }
