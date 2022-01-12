@@ -89,6 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BUILD_ID: ${{ github.event.number }}
+      CRON_PASSWORD: ${{ secrets.CRON_PASSWORD }}
       NAMESPACE: 950003-dev
       BUILD_NAMESPACE: 950003-tools
       BRANCH: main
@@ -193,6 +194,7 @@ jobs:
     environment: TEST
     env:
       BUILD_ID: ${{ github.event.number }}
+      CRON_PASSWORD: ${{ secrets.CRON_PASSWORD }}
       NAMESPACE: 950003-test
       BUILD_NAMESPACE: 950003-tools
       BRANCH: main
@@ -322,6 +324,7 @@ jobs:
     environment: PROD
     env:
       BUILD_ID: ${{ github.event.number }}
+      CRON_PASSWORD: ${{ secrets.CRON_PASSWORD }}
       NAMESPACE: 950003-prod
       BUILD_NAMESPACE: 950003-tools
       BRANCH: main
