@@ -171,6 +171,7 @@ jobs:
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
+                -p CRON_PASSWORD="${{ secrets.CRON_PASSWORD }}" | \
           oc -n ${NAMESPACE} apply -f -
           oc rollout latest dc/moodle -n ${NAMESPACE}
           # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
@@ -277,6 +278,7 @@ jobs:
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
+                -p CRON_PASSWORD="${{ secrets.CRON_PASSWORD }}" | \
           oc -n ${NAMESPACE} apply -f -
           oc rollout latest dc/moodle -n ${NAMESPACE}
           # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
@@ -405,6 +407,7 @@ jobs:
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" | \
+                -p CRON_PASSWORD="${{ secrets.CRON_PASSWORD }}" | \
           oc -n ${NAMESPACE} apply -f -
           oc rollout latest dc/moodle -n ${NAMESPACE}
           # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
