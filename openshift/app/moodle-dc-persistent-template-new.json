@@ -575,6 +575,6 @@
       "name": "CRON_PASSWORD",
       "required": true,
       "value": "${CRON_PASSWORD}"
-    },
+    }
   ]
 }
