@@ -184,7 +184,7 @@
                 "imagePullPolicy": "Always",
                 "livenessProbe": {
                   "httpGet": {
-                    "path": "https://${SITE_URL}/admin/cron.php?password=%2B%3DCRONpa33w0rd",
+                    "path": "https://${SITE_URL}/admin/cron.php?password=${CRON_PASSWORD}",
                     "port": 8080,
                     "scheme": "HTTP"
                   },
@@ -568,6 +568,13 @@
       "name": "GITHUB_AUTH_TOKEN",
       "required": true,
       "value": "${GITHUB_AUTH_TOKEN}"
+    },
+    {
+      "description": "Cron Password",
+      "displayName": "Cron Password",
+      "name": "CRON_PASSWORD",
+      "required": true,
+      "value": "${CRON_PASSWORD}"
     }
   ]
 }
