@@ -38,6 +38,8 @@ jobs:
               find /tmp/file-backups/ -maxdepth 1 -mtime ${NO_OF_DAYS} -type d -exec rm -r  {} \; && \
               echo 'PROJECT NAMESPACE is: '  ${{ matrix.namespace }} && \
               rsync -rz /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S") && \
-              rsync -rz /vendor/moodle/moodledata/persistent/models/ /tmp/file-backups/models-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S")
+              if [ -d "/vendor/moodle/moodledata/persistent/models" ]; then
+                rsync -rz /vendor/moodle/moodledata/persistent/models/ /tmp/file-backups/models-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S") 
+              fi
               "
           done
