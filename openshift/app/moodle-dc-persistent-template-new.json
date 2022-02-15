@@ -207,6 +207,11 @@
                   {
                     "mountPath": "/tmp/file-backups",
                     "name": "file-backup-data"
+                  },
+                  {
+                    "name": "env-data",
+                    "mountPath": "/.env",
+                    "subPath": ".env"
                   }
                 ],
                 "resources": {
@@ -372,8 +377,14 @@
               },
               {
                 "name": "env-data",
-                "persistentVolumeClaim": {
-                  "claimName": "env-data"
+                "configMap": {
+                  "name": "moodle-env",
+                  "items": [
+                    {
+                      "key": ".env",
+                      "path": ".env"
+                    }
+                  ]
                 }
               }
             ]
