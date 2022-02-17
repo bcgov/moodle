@@ -9,6 +9,8 @@ ENV MOODLE_BRANCH_VERSION MOODLE_311_STABLE
 ENV F2F_BRANCH_VERSION MOODLE_311_STABLE
 ENV HVP_BRANCH_VERSION stable
 ENV FORMAT_BRANCH_VERSION MOODLE_311
+ENV CERTIFICATE_BRANCH_VERSION MOODLE_31_STABLE
+ENV CUSTOMCERT_BRANCH_VERSION MOODLE_311_STABLE
 
 WORKDIR /
 
@@ -57,6 +59,8 @@ RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     mkdir -p /vendor/moodle/moodle/mod/facetoface && \
     mkdir -p /vendor/moodle/moodle/mod/hvp  && \
     mkdir -p /vendor/moodle/moodle/mod/format  && \
+    mkdir -p /vendor/moodle/moodle/mod/certificate  && \
+    mkdir -p /vendor/moodle/moodle/mod/customcer  && \
     chown -R www-data:www-data /vendor/moodle/moodle/admin/tool/ && \
     chown -R www-data:www-data /vendor/moodle/moodle/mod/
 
@@ -64,6 +68,8 @@ RUN git clone --recurse-submodules https://github.com/catalyst/moodle-tool_trigg
 RUN git clone --recurse-submodules --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
 RUN git clone --recurse-submodules --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp
 RUN git clone --recurse-submodules --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll /vendor/moodle/moodle/mod/format
+RUN git clone --recurse-submodules --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate /vendor/moodle/moodle/mod/certificate
+RUN git clone --recurse-submodules --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert /vendor/moodle/moodle/mod/customcer
 
 # RUN git submodule update --init
 
