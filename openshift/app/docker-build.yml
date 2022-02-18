@@ -96,18 +96,4 @@ parameters:
   - name: MEMORY_LIMIT
     value: "8Gi"
   - name: CPU_REQUEST
-    value: "4"
-  - name: MEMORY_REQUEST
-    value: "8Gi"
-  - name: GITHUB_AUTH_TOKEN
-    required: true
-  - name: ARG_KEY_2
-    value: __DUMMY_2
-  - name: ARG_KEY_3
-    value: __DUMMY_3
-  - name: ARG_KEY_4
-    value: __DUMMY_4
-  - name: ARG_VAL_1
-  - name: ARG_VAL_2
-  - name: ARG_VAL_3
-  - name: ARG_VAL_4
+    value: "2"
