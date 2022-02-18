@@ -97,3 +97,7 @@ parameters:
     value: "8Gi"
   - name: CPU_REQUEST
     value: "2"
+  - name: MEMORY_REQUEST
+    value: "8Gi"
+  - name: GITHUB_AUTH_TOKEN
+    required: true
