@@ -62,8 +62,8 @@ RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     mkdir -p /vendor/moodle/moodle/mod/certificate  && \
     mkdir -p /vendor/moodle/moodle/mod/customcert  && \
     chown -R www-data:www-data /vendor/moodle/moodle/admin/tool/ && \
-    chown -R www-data:www-data /vendor/moodle/moodle/mod/
-    chown -R www-data:www-data /vendor/moodle/moodle/course/format/ && \  
+    chown -R www-data:www-data /vendor/moodle/moodle/mod/ && \   
+    chown -R www-data:www-data /vendor/moodle/moodle/course/format/ 
 
 RUN git clone --recurse-submodules https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger
 RUN git clone --recurse-submodules --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
