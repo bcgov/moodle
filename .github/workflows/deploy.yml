@@ -185,6 +185,15 @@ jobs:
           oc project ${NAMESPACE}     
           echo "Listing pods.."
           oc get pods|grep moodle
+          for name in $podNames; do
+            oc exec $podNames -- bash -c "
+              cat <<- EOF > .env
+              DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+              SSL_PROXY=true
+              SITE_URL=https://moodle-950003-dev.apps.silver.devops.gov.bc.ca
+              DB_HOST=mysql-0.mysql
+              `EOF` "
+          done
           export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}" 
 
