@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 # Build intermediate container to handle Github token
-FROM aro.jfrog.io/moodle/php:7.3-apache as composer
+FROM aro.jfrog.io/moodle/php:7.4-apache as composer
 
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 
@@ -62,8 +62,8 @@ RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     mkdir -p /vendor/moodle/moodle/mod/certificate  && \
     mkdir -p /vendor/moodle/moodle/mod/customcert  && \
     chown -R www-data:www-data /vendor/moodle/moodle/admin/tool/ && \
-    chown -R www-data:www-data /vendor/moodle/moodle/mod/ && \   
-    chown -R www-data:www-data /vendor/moodle/moodle/course/format/ 
+    chown -R www-data:www-data /vendor/moodle/moodle/mod/ && \
+    chown -R www-data:www-data /vendor/moodle/moodle/course/format/
 
 RUN git clone --recurse-submodules https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger
 RUN git clone --recurse-submodules --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
@@ -80,7 +80,7 @@ RUN git clone --recurse-submodules --branch $CUSTOMCERT_BRANCH_VERSION --single-
 
 
 # Build Moodle image
-FROM aro.jfrog.io/moodle/php:7.3-apache as moodle
+FROM aro.jfrog.io/moodle/php:7.4-apache as moodle
 
 ARG CONTAINER_PORT=8080
 ARG ENV_FILE=""
@@ -180,7 +180,7 @@ RUN docker-php-ext-enable xmlrpc
 RUN docker-php-ext-enable zip
 
 RUN docker-php-ext-configure intl
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 
 
 RUN { \
@@ -228,11 +228,11 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
     if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle ; fi && \
     if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodle/mod ; fi && \
 	if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodledata/persistent ; fi && \
-	chgrp -R 0 ${APACHE_DOCUMENT_ROOT} && \ 
+	chgrp -R 0 ${APACHE_DOCUMENT_ROOT} && \
     chmod -R g=u ${APACHE_DOCUMENT_ROOT} && \
     chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT} && \
     chgrp -R 0 /vendor/moodle/moodledata/persistent && \
-	chmod -R g=u /vendor/moodle/moodledata/persistent && \    
+	chmod -R g=u /vendor/moodle/moodledata/persistent && \
 	chown -R www-data:www-data /vendor/moodle/moodledata/persistent && \
         chgrp -R 0 /.env && \
         chmod -R g=u /.env
