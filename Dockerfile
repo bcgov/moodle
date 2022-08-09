@@ -215,12 +215,6 @@ COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/l
 #COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
 COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
-RUN if [ "$ENV_FILE" != ".local" ] ; then \
-    echo NOT LOCAL ENVIRONEMNT; \
-  else \
-    echo LOCAL ENVIRONEMNT; \
-  fi
-
 # Setup Permissions for www user
 RUN rm -rf /vendor/moodle/moodle/.htaccess && \
     mkdir -p /vendor/moodle/moodledata/ && \
