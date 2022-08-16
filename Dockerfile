@@ -180,7 +180,7 @@ RUN docker-php-ext-enable xmlrpc
 RUN docker-php-ext-enable zip
 
 RUN docker-php-ext-configure intl
-RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
 
 RUN { \
