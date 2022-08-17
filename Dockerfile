@@ -222,14 +222,14 @@ COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/
 #RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle ; fi
 #RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodle/mod ; fi
 #RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodledata/persistent ; fi
-RUN chgrp -R 0 ${APACHE_DOCUMENT_ROOT}
-RUN chmod -R g=u ${APACHE_DOCUMENT_ROOT}
-RUN chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT}
-RUN chgrp -R 0 /vendor/moodle/moodledata/persistent
-RUN chmod -R g=u /vendor/moodle/moodledata/persistent
-RUN chown -R www-data:www-data /vendor/moodle/moodledata/persistent
-RUN chgrp -R 0 /.env
-RUN chmod -R g=u /.env
+#RUN chgrp -R 0 ${APACHE_DOCUMENT_ROOT}
+#RUN chmod -R g=u ${APACHE_DOCUMENT_ROOT}
+#RUN chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT}
+#RUN chgrp -R 0 /vendor/moodle/moodledata/persistent
+#RUN chmod -R g=u /vendor/moodle/moodledata/persistent
+#RUN chown -R www-data:www-data /vendor/moodle/moodledata/persistent
+#RUN chgrp -R 0 /.env
+#RUN chmod -R g=u /.env
 
 #chown -R www-data:www-data /vendor/moodle/moodle/mod && \
 #chgrp -R 0 /vendor/moodle/moodle/mod && \
