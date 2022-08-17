@@ -216,12 +216,12 @@ COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/l
 COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
 # Setup Permissions for www user
-RUN rm -rf /vendor/moodle/moodle/.htaccess
-RUN mkdir -p /vendor/moodle/moodledata/
-RUN mkdir -p /vendor/moodle/moodledata/persistent
-RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle ; fi
-RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodle/mod ; fi
-RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodledata/persistent ; fi
+#RUN rm -rf /vendor/moodle/moodle/.htaccess
+#RUN mkdir -p /vendor/moodle/moodledata/
+#RUN mkdir -p /vendor/moodle/moodledata/persistent
+#RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle ; fi
+#RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodle/mod ; fi
+#RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodledata/persistent ; fi
 RUN chgrp -R 0 ${APACHE_DOCUMENT_ROOT}
 RUN chmod -R g=u ${APACHE_DOCUMENT_ROOT}
 RUN chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT}
