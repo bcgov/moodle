@@ -103,7 +103,6 @@ RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
 	apt-get install -y zlib1g-dev libicu-dev g++ && \
 	apt-get install rsync grsync && \
 	apt-get install tar && \
-	apt-get install graphviz && \
 	set -eux; \
 	\
 	if command -v a2enmod; then \
@@ -156,6 +155,7 @@ RUN apt-get install zip -y
 RUN apt-get install default-mysql-client -y
 RUN apt-get install vim -y
 RUN apt-get install wget -y
+RUN apt-get install graphviz -y
 RUN apt-get install libbz2-dev -y
 
 RUN docker-php-ext-install mysqli
