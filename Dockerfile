@@ -56,6 +56,7 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 RUN git clone --recurse-submodules --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
 
 RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
+    mkdir -p /vendor/moodle/moodle/admin/tool/dataflows && \
     mkdir -p /vendor/moodle/moodle/mod/facetoface && \
     mkdir -p /vendor/moodle/moodle/mod/hvp  && \
     mkdir -p /vendor/moodle/moodle/course/format/topcoll  && \
@@ -66,6 +67,7 @@ RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     chown -R www-data:www-data /vendor/moodle/moodle/course/format/
 
 RUN git clone --recurse-submodules https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger
+RUN git clone --recurse-submodules https://github.com/catalyst/moodle-tool_dataflows.git /vendor/moodle/moodle/admin/tool/dataflows
 RUN git clone --recurse-submodules --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
 RUN git clone --recurse-submodules --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp
 RUN git clone --recurse-submodules --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll /vendor/moodle/moodle/course/format/topcoll
@@ -101,6 +103,7 @@ RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
 	apt-get install -y zlib1g-dev libicu-dev g++ && \
 	apt-get install rsync grsync && \
 	apt-get install tar && \
+	apt-get install graphviz && \
 	set -eux; \
 	\
 	if command -v a2enmod; then \
