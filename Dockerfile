@@ -217,24 +217,23 @@ COPY --chown=www-data:www-data app/config/sync/web-root.htaccess /vendor/moodle/
 COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/local/etc/php/php.ini
 
 # Setup Permissions for www user
-#RUN rm -rf /vendor/moodle/moodle/.htaccess
-#RUN mkdir -p /vendor/moodle/moodledata/
-#RUN mkdir -p /vendor/moodle/moodledata/persistent
-#RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle ; fi
-#RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodle/mod ; fi
-#RUN if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodledata/persistent ; fi
-#RUN chgrp -R 0 ${APACHE_DOCUMENT_ROOT}
-#RUN chmod -R g=u ${APACHE_DOCUMENT_ROOT}
-#RUN chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT}
-#RUN chgrp -R 0 /vendor/moodle/moodledata/persistent
-#RUN chmod -R g=u /vendor/moodle/moodledata/persistent
-#RUN chown -R www-data:www-data /vendor/moodle/moodledata/persistent
-#RUN chgrp -R 0 /.env
-#RUN chmod -R g=u /.env
-
-#chown -R www-data:www-data /vendor/moodle/moodle/mod && \
-#chgrp -R 0 /vendor/moodle/moodle/mod && \
-#chmod -R g=u /vendor/moodle/moodle/mod
+RUN rm -rf /vendor/moodle/moodle/.htaccess && \
+    mkdir -p /vendor/moodle/moodledata/ && \
+    mkdir -p /vendor/moodle/moodledata/persistent && \
+    if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle ; fi && \
+    if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodle/mod ; fi && \
+    if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodledata/persistent ; fi && \
+    chgrp -R 0 ${APACHE_DOCUMENT_ROOT} && \
+    chmod -R g=u ${APACHE_DOCUMENT_ROOT} && \
+    chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT} && \
+    chgrp -R 0 /vendor/moodle/moodledata/persistent && \
+    chmod -R g=u /vendor/moodle/moodledata/persistent && \
+    chown -R www-data:www-data /vendor/moodle/moodledata/persistent && \
+    chgrp -R 0 /.env && \
+    chmod -R g=u /.env && \
+    chown -R www-data:www-data /vendor/moodle/moodle/mod && \
+    chgrp -R 0 /vendor/moodle/moodle/mod && \
+    chmod -R g=u /vendor/moodle/moodle/mod
 
 # Copy plugins (not working from composer.json 'yet')
 # COPY --chown=www-data:www-data app/config/sync/moodle/plugins/mod/. /vendor/moodle/moodle/mod
