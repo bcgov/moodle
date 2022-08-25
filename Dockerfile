@@ -206,17 +206,17 @@ WORKDIR /
 # Don't copy .env to OpenShift - use Deployment Config > Environment instead
 COPY .env$ENV_FILE ./.env
 
-USER root
+# USER root
+
+# Use ONE of these - High Availability (-ha-readonly) or standard
+#COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
+COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
 # COPY /app/config/sync/apache.conf /etc/apache2/sites-enabled/000-default.conf
 COPY --chown=www-data:www-data app/config/sync/apache2.conf /etc/apache2/apache2.conf
 COPY --chown=www-data:www-data app/config/sync/ports.conf /etc/apache2/ports.conf
 COPY --chown=www-data:www-data app/config/sync/web-root.htaccess /vendor/moodle/moodle/.htaccess
 COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/local/etc/php/php.ini
-
-# Use ONE of these - High Availability (-ha-readonly) or standard
-#COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
-# COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
 # Setup Permissions for www user
 #RUN rm -rf /vendor/moodle/moodle/.htaccess
