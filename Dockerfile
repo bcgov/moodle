@@ -217,7 +217,6 @@ COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/l
 # Use ONE of these - High Availability (-ha-readonly) or standard
 #COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
 # COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
-COPY app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
 # Setup Permissions for www user
 #RUN rm -rf /vendor/moodle/moodle/.htaccess
