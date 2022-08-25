@@ -53,9 +53,9 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 # Add plugins (try to add these via composer later)
 #RUN mkdir -p /vendor/moodle
 
-RUN git clone --recurse-submodules --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
+RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
 
-RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
+RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     mkdir -p /vendor/moodle/moodle/admin/tool/dataflows && \
     mkdir -p /vendor/moodle/moodle/mod/facetoface && \
     mkdir -p /vendor/moodle/moodle/mod/hvp  && \
@@ -66,13 +66,13 @@ RUN	mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     chown -R www-data:www-data /vendor/moodle/moodle/mod/ && \
     chown -R www-data:www-data /vendor/moodle/moodle/course/format/
 
-RUN git clone --recurse-submodules https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger
-RUN git clone --recurse-submodules https://github.com/catalyst/moodle-tool_dataflows.git /vendor/moodle/moodle/admin/tool/dataflows
-RUN git clone --recurse-submodules --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface
-RUN git clone --recurse-submodules --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp
-RUN git clone --recurse-submodules --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll /vendor/moodle/moodle/course/format/topcoll
-RUN git clone --recurse-submodules --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate /vendor/moodle/moodle/mod/certificate
-RUN git clone --recurse-submodules --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert /vendor/moodle/moodle/mod/customcert
+RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger && \
+    git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_dataflows.git /vendor/moodle/moodle/admin/tool/dataflows && \
+    git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface && \
+    git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && \
+    git clone --recurse-submodules --jobs 8 --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll /vendor/moodle/moodle/course/format/topcoll && \
+    git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate /vendor/moodle/moodle/mod/certificate && \
+    git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert /vendor/moodle/moodle/mod/customcert
 
 # RUN git submodule update --init
 
@@ -142,48 +142,46 @@ RUN apt-get update && apt-get install -y libbz2-dev
 #Install rsync
 RUN apt-get install rsync -y
 
-RUN apt-get install cron -y
-RUN apt-get install libfreetype6-dev -y
-RUN apt-get install libjpeg-dev \libpng-dev -y
-RUN apt-get install libpq-dev -y
-RUN apt-get install libssl-dev -y
-RUN apt-get install ca-certificates -y
-RUN apt-get install libcurl4-openssl-dev -y
-RUN apt-get install libgd-tools -y
-RUN apt-get install libmcrypt-dev -y
-RUN apt-get install zip -y
-RUN apt-get install default-mysql-client -y
-RUN apt-get install vim -y
-RUN apt-get install wget -y
-RUN apt-get install graphviz -y
-RUN apt-get install libbz2-dev -y
+RUN apt-get install cron -y && \
+    apt-get install libfreetype6-dev -y && \
+    apt-get install libjpeg-dev \libpng-dev -y && \
+    apt-get install libpq-dev -y && \
+    apt-get install libssl-dev -y && \
+    apt-get install ca-certificates -y && \
+    apt-get install libcurl4-openssl-dev -y && \
+    apt-get install libgd-tools -y && \
+    apt-get install libmcrypt-dev -y && \
+    apt-get install zip -y && \
+    apt-get install default-mysql-client -y && \
+    apt-get install vim -y && \
+    apt-get install wget -y && \
+    apt-get install graphviz -y && \
+    apt-get install libbz2-dev -y
 
-RUN docker-php-ext-install mysqli
-RUN docker-php-ext-install xmlrpc
-RUN docker-php-ext-install soap
-RUN docker-php-ext-install zip
-RUN docker-php-ext-install bcmath
-RUN docker-php-ext-install bz2
-RUN docker-php-ext-install exif
-RUN docker-php-ext-install ftp
-RUN docker-php-ext-install gd
-RUN docker-php-ext-install gettext
-RUN docker-php-ext-install intl
-RUN docker-php-ext-install opcache
-RUN docker-php-ext-install shmop
-RUN docker-php-ext-install sysvmsg
-RUN docker-php-ext-install sysvsem
-RUN docker-php-ext-install sysvshm
-
-RUN docker-php-ext-enable gd
-RUN docker-php-ext-enable intl
-RUN docker-php-ext-enable mysqli
-RUN docker-php-ext-enable soap
-RUN docker-php-ext-enable xmlrpc
-RUN docker-php-ext-enable zip
-
-RUN docker-php-ext-configure intl
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install mysqli && \
+    docker-php-ext-install xmlrpc && \
+    docker-php-ext-install soap && \
+    docker-php-ext-install zip && \
+    docker-php-ext-install bcmath && \
+    docker-php-ext-install bz2 && \
+    docker-php-ext-install exif && \
+    docker-php-ext-install ftp && \
+    docker-php-ext-install gd && \
+    docker-php-ext-install gettext && \
+    docker-php-ext-install intl && \
+    docker-php-ext-install opcache && \
+    docker-php-ext-install shmop && \
+    docker-php-ext-install sysvmsg && \
+    docker-php-ext-install sysvsem && \
+    docker-php-ext-install sysvshm && \
+    docker-php-ext-enable gd && \
+    docker-php-ext-enable intl && \
+    docker-php-ext-enable mysqli && \
+    docker-php-ext-enable soap && \
+    docker-php-ext-enable xmlrpc && \
+    docker-php-ext-enable zip && \
+    docker-php-ext-configure intl && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg
 
 
 RUN { \
@@ -206,7 +204,7 @@ WORKDIR /
 # Don't copy .env to OpenShift - use Deployment Config > Environment instead
 COPY .env$ENV_FILE ./.env
 
-# USER root
+USER root
 
 # Use ONE of these - High Availability (-ha-readonly) or standard
 #COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
