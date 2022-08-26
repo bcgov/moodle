@@ -23,7 +23,7 @@ $CFG->dboptions = array (
   'dbcollation' => 'latin1_swedish_ci',
 );
 
-$CFG->wwwroot   = (isset($_ENV['SITE_URL'])) ? $_ENV['SITE_URL'] : 'https://moodle-gamma-950003-dev.apps.silver.devops.gov.bc.ca';
+$CFG->wwwroot   = (isset($_ENV['SITE_URL'])) ? $_ENV['SITE_URL'] : 'https://moodle-950003-dev.apps.silver.devops.gov.bc.ca';
 $CFG->dataroot  = (isset($_ENV['MOODLE_DATA_PATH'])) ? $_ENV['MOODLE_DATA_PATH'] : '/vendor/moodle/moodledata/persistent';
 // $CFG->themedir  = (isset($_ENV['MOODLE_DATA_MOUNT_PATH'])) ? $_ENV['MOODLE_DATA_MOUNT_PATH'].'/theme' : '/vendor/moodle/moodledata/theme';
 $CFG->admin     = 'admin';
