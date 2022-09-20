@@ -164,7 +164,7 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-install xmlrpc && \
     docker-php-ext-install soap && \
     docker-php-ext-install zip && \
-    docker-php-ext-install excimer && \
+    docker-php-ext-install php-excimer && \
     docker-php-ext-install bcmath && \
     docker-php-ext-install bz2 && \
     docker-php-ext-install exif && \
@@ -183,7 +183,7 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-enable soap && \
     docker-php-ext-enable xmlrpc && \
     docker-php-ext-enable zip && \
-    docker-php-ext-enable excimer && \
+    docker-php-ext-enable php-excimer && \
     docker-php-ext-configure intl && \
     docker-php-ext-configure gd --with-freetype --with-jpeg
 
