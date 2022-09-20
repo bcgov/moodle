@@ -56,6 +56,7 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
 
 RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
+    mkdir -p /vendor/moodle/moodle/admin/tool/excimer && \
     mkdir -p /vendor/moodle/moodle/admin/tool/dataflows && \
     mkdir -p /vendor/moodle/moodle/mod/facetoface && \
     mkdir -p /vendor/moodle/moodle/mod/hvp  && \
@@ -68,6 +69,7 @@ RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
 
 RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger && \
     git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_dataflows.git /vendor/moodle/moodle/admin/tool/dataflows && \
+    git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_excimer.git /vendor/moodle/moodle/admin/tool/excimer && \
     git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface && \
     git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && \
     git clone --recurse-submodules --jobs 8 --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll /vendor/moodle/moodle/course/format/topcoll && \
@@ -162,6 +164,7 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-install xmlrpc && \
     docker-php-ext-install soap && \
     docker-php-ext-install zip && \
+    docker-php-ext-install excimer && \
     docker-php-ext-install bcmath && \
     docker-php-ext-install bz2 && \
     docker-php-ext-install exif && \
@@ -180,6 +183,7 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-enable soap && \
     docker-php-ext-enable xmlrpc && \
     docker-php-ext-enable zip && \
+    docker-php-ext-enable excimer && \
     docker-php-ext-configure intl && \
     docker-php-ext-configure gd --with-freetype --with-jpeg
 
