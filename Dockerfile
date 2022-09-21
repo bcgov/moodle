@@ -164,7 +164,6 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-install xmlrpc && \
     docker-php-ext-install soap && \
     docker-php-ext-install zip && \
-    docker-php-ext-install php-excimer && \
     docker-php-ext-install bcmath && \
     docker-php-ext-install bz2 && \
     docker-php-ext-install exif && \
@@ -183,10 +182,12 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-enable soap && \
     docker-php-ext-enable xmlrpc && \
     docker-php-ext-enable zip && \
-    docker-php-ext-enable php-excimer && \
     docker-php-ext-configure intl && \
     docker-php-ext-configure gd --with-freetype --with-jpeg
 
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions excimer
 
 RUN { \
 		echo 'opcache.enable_cli=1'; \
