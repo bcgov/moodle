@@ -205,7 +205,6 @@ jobs:
   deployTest:
     name: Deploy APP to Test environment
     runs-on: ubuntu-latest
-    environment: TEST
     if: github.ref_name == 'test'
     env:
       BUILD_ID: ${{ github.event.number }}
@@ -218,7 +217,7 @@ jobs:
       DB_BACKUP_APP: db-backup
       DB_NAME: moodle
     needs:
-      - deployDev
+      - build
     steps:
        # - name: Print env
        #   run: |
@@ -337,7 +336,6 @@ jobs:
   deployProd:
     name: Deploy APP to Prod environment
     runs-on: ubuntu-latest
-    environment: PROD
     if: github.ref_name == 'prod'
     env:
       BUILD_ID: ${{ github.event.number }}
@@ -350,7 +348,7 @@ jobs:
       DB_BACKUP_APP: db-backup
       DB_NAME: moodle
     needs:
-      - deployTest
+      - build
     steps:
        # - name: Print env
        #   run: |
