@@ -400,7 +400,7 @@ jobs:
                 -p PROJECT_NAMESPACE=950003-prod\
                 -p DB_SERVICE_NAME=mysql-0.mysql \
                 -p MOODLE_VOLUME_CAPACITY=15Gi \
-                -p BACKUP_VOLUME_SIZE=25Gi \
+                -p BACKUP_VOLUME_SIZE=20Gi \
                 -p DB_NAME=moodle \
                 -p DB_USER=moodle \
                 -p HTTP_PORT=8080 \
