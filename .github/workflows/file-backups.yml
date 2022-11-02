@@ -1,11 +1,9 @@
 name: Run file backups for Moodle
 
-on:
-  workflow_dispatch:
 
-# on:
-#   schedule:
-#     - cron: '0 9 * * *'
+on:
+  schedule:
+    - cron: '0 9 * * *'
 
 jobs:
   fileBackup:
@@ -45,4 +43,3 @@ jobs:
                 zip -r /tmp/file-backups/models-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").zip  /vendor/moodle/moodledata/persistent/models 
               fi
               "
-          done
