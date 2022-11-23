@@ -221,7 +221,7 @@
                   },
                   "requests": {
                     "memory": "4Gi",
-                    "cpu": "1500m"
+                    "cpu": "1000m"
                   }
                 },
                 "env": [
