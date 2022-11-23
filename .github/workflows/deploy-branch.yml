@@ -3,10 +3,11 @@
 name: Deploy on Openshift
   
 on:
-  # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows
   push:
-    # Edit to the branch(es) you want to build and deploy on each push.
-    branches: [ main ]
+    branches:
+      - dev
+      - test
+      - prod
 
 jobs:
   #Print variables for logging and debugging purposes
@@ -20,6 +21,7 @@ jobs:
           echo Git Build ID: ${{ github.event.number }}
           echo Git Pull Request Ref: ${{ github.event.pull_request.head.sha }}
           echo OC CLI Version: $(oc version)
+          echo Git Branch name: ${{ github.ref_name }}
   
   #Build the app
 
@@ -27,11 +29,12 @@ jobs:
     name: Build APP
     runs-on: ubuntu-latest
     # if: ${{ github.event.pull_request.merged == true}}
+    if: github.ref_name == 'dev' || github.ref_name  == 'test' || github.ref_name  == 'prod'
     env:
       BUILD_ID: ${{ github.event.number }}
       BUILD_NAMESPACE: 950003-tools
-      BRANCH: main
-      BUILD_TAG: latest
+      BRANCH: ${{ github.ref_name }}
+      BUILD_TAG: ${{ github.ref_name }}
       APP: moodle
       DB_BACKUP_APP: db-backup
       #KC_AUTH_URL: https://dev.oidc.gov.bc.ca/auth/
@@ -87,12 +90,13 @@ jobs:
   deployDev:
     name: Deploy APP to Dev environment
     runs-on: ubuntu-latest
+    if: github.ref_name == 'dev'
     env:
       BUILD_ID: ${{ github.event.number }}
       CRON_PASSWORD: ${{ secrets.CRON_PASSWORD }}
       NAMESPACE: 950003-dev
       BUILD_NAMESPACE: 950003-tools
-      BRANCH: main
+      BRANCH: ${{ github.ref_name }}
       APP: moodle
       APP_HOST: moodle-950003-dev.apps.silver.devops.gov.bc.ca
       DB_BACKUP_APP: db-backup
@@ -167,7 +171,7 @@ jobs:
                 -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
                 -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
                 -p BUILD_NAMESPACE="950003-tools" \
-                -p IMAGE_STREAM_TAG="moodle:latest" \
+                -p IMAGE_STREAM_TAG="moodle:dev" \
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" \
@@ -202,12 +206,13 @@ jobs:
     name: Deploy APP to Test environment
     runs-on: ubuntu-latest
     environment: TEST
+    if: github.ref_name == 'test'
     env:
       BUILD_ID: ${{ github.event.number }}
       CRON_PASSWORD: ${{ secrets.CRON_PASSWORD }}
       NAMESPACE: 950003-test
       BUILD_NAMESPACE: 950003-tools
-      BRANCH: main
+      BRANCH: ${{ github.ref_name }}
       APP: moodle
       APP_HOST: moodle-950003-test.apps.silver.devops.gov.bc.ca
       DB_BACKUP_APP: db-backup
@@ -283,7 +288,7 @@ jobs:
                 -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
                 -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
                 -p BUILD_NAMESPACE="950003-tools" \
-                -p IMAGE_STREAM_TAG="moodle:latest" \
+                -p IMAGE_STREAM_TAG="moodle:test" \
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" \
@@ -333,12 +338,13 @@ jobs:
     name: Deploy APP to Prod environment
     runs-on: ubuntu-latest
     environment: PROD
+    if: github.ref_name == 'prod'
     env:
       BUILD_ID: ${{ github.event.number }}
       CRON_PASSWORD: ${{ secrets.CRON_PASSWORD }}
       NAMESPACE: 950003-prod
       BUILD_NAMESPACE: 950003-tools
-      BRANCH: main
+      BRANCH: ${{ github.ref_name }}
       APP: moodle
       APP_HOST: moodle-950003-prod.apps.silver.devops.gov.bc.ca
       DB_BACKUP_APP: db-backup
@@ -399,8 +405,8 @@ jobs:
                 -p MOODLE_MEMORY_LIMIT=1Gi \
                 -p PROJECT_NAMESPACE=950003-prod\
                 -p DB_SERVICE_NAME=mysql-0.mysql \
-                -p MOODLE_VOLUME_CAPACITY=15Gi \
-                -p BACKUP_VOLUME_SIZE=20Gi \
+                -p MOODLE_VOLUME_CAPACITY=10Gi \
+                -p BACKUP_VOLUME_SIZE=15Gi \
                 -p DB_NAME=moodle \
                 -p DB_USER=moodle \
                 -p HTTP_PORT=8080 \
@@ -412,7 +418,7 @@ jobs:
                 -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
                 -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
                 -p BUILD_NAMESPACE="950003-tools" \
-                -p IMAGE_STREAM_TAG="moodle:latest" \
+                -p IMAGE_STREAM_TAG="moodle:prod" \
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" \
