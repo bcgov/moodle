@@ -36,10 +36,13 @@ jobs:
           # Only Exec into one pod, and place the backups in the shared and mounted backup PVC
             oc exec ${podNames[0]} -- bash -c "
               mkdir -p /tmp/file-backups && \
-              find /tmp/file-backups/ -maxdepth 1 -mtime ${NO_OF_DAYS} -type d -exec rm -r  {} \; && \
+              find /tmp/file-backups/ -maxdepth 1 -mtime ${NO_OF_DAYS} -type f -exec rm -r  {} \; && \
               echo 'PROJECT NAMESPACE is: '  ${{ matrix.namespace }} && \
-              zip -r /tmp/file-backups/filedir-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").zip /vendor/moodle/moodledata/persistent/filedir/ /vendor/moodle/moodledata/persistent/models
+              zip -r /tmp/file-backups/filedir-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").zip /vendor/moodle/moodledata/persistent/filedir
               if [ -d "/vendor/moodle/moodledata/persistent/models" ]; then
                 zip -r /tmp/file-backups/models-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").zip  /vendor/moodle/moodledata/persistent/models 
+              fi
+              if [ -d "/vendor/moodle/moodledata/persistent/lang" ]; then
+                zip -r /tmp/file-backups/lang-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").zip  /vendor/moodle/moodledata/persistent/lang 
               fi
               "
