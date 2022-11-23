@@ -1,12 +1,13 @@
 # Static Deploy On Openshift
 # Builds and Deploys merged PR's to persistent pods/services/routes/etc in the OpenShift Dev environment.
 name: Deploy on Openshift
-  
+
 on:
-  # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows
   push:
-    # Edit to the branch(es) you want to build and deploy on each push.
-    branches: [ main ]
+    branches:
+      - dev
+      - test
+      - prod
 
 jobs:
   #Print variables for logging and debugging purposes
@@ -20,18 +21,20 @@ jobs:
           echo Git Build ID: ${{ github.event.number }}
           echo Git Pull Request Ref: ${{ github.event.pull_request.head.sha }}
           echo OC CLI Version: $(oc version)
-  
+          echo Git Branch name: ${{ github.ref_name }}
+
   #Build the app
 
   build:
     name: Build APP
     runs-on: ubuntu-latest
     # if: ${{ github.event.pull_request.merged == true}}
+    if: github.ref_name == 'dev' || github.ref_name  == 'test' || github.ref_name  == 'prod'
     env:
       BUILD_ID: ${{ github.event.number }}
       BUILD_NAMESPACE: 950003-tools
-      BRANCH: main
-      BUILD_TAG: latest
+      BRANCH: ${{ github.ref_name }}
+      BUILD_TAG: ${{ github.ref_name }}
       APP: moodle
       DB_BACKUP_APP: db-backup
       #KC_AUTH_URL: https://dev.oidc.gov.bc.ca/auth/
@@ -63,7 +66,7 @@ jobs:
   #     #     -p GITHUB_AUTH_TOKEN=${{secrets.AUTH_TOKEN}} \
   #     #     -p SOURCE_REPOSITORY_URL="https://github.com/BCDevOps/backup-container.git" \
   #     #     -p SOURCE_REPOSITORY_REF="master" \
-  #     #     -p SOURCE_CONTEXT_DIR="docker" | oc -n ${BUILD_NAMESPACE} apply -f - 
+  #     #     -p SOURCE_CONTEXT_DIR="docker" | oc -n ${BUILD_NAMESPACE} apply -f -
   #     #     oc -n ${BUILD_NAMESPACE} start-build bc/${DB_BACKUP_APP} --wait
 
       # Build the app images
@@ -87,12 +90,13 @@ jobs:
   deployDev:
     name: Deploy APP to Dev environment
     runs-on: ubuntu-latest
+    if: github.ref_name == 'dev'
     env:
       BUILD_ID: ${{ github.event.number }}
       CRON_PASSWORD: ${{ secrets.CRON_PASSWORD }}
       NAMESPACE: 950003-dev
       BUILD_NAMESPACE: 950003-tools
-      BRANCH: main
+      BRANCH: ${{ github.ref_name }}
       APP: moodle
       APP_HOST: moodle-950003-dev.apps.silver.devops.gov.bc.ca
       DB_BACKUP_APP: db-backup
@@ -136,7 +140,7 @@ jobs:
       #       ATTEMPTS=$((attempts + 1))
       #       sleep 10
       #     done
-      #     oc project ${NAMESPACE}     
+      #     oc project ${NAMESPACE}
       #     echo "Listing pods.."
 
       - name: Deploy APP
@@ -167,7 +171,7 @@ jobs:
                 -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
                 -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
                 -p BUILD_NAMESPACE="950003-tools" \
-                -p IMAGE_STREAM_TAG="moodle:latest" \
+                -p IMAGE_STREAM_TAG="moodle:dev" \
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" \
@@ -182,7 +186,7 @@ jobs:
             ATTEMPTS=$((attempts + 1))
             sleep 10
           done
-          oc project ${NAMESPACE}     
+          oc project ${NAMESPACE}
           echo "Listing pods.."
           oc get pods|grep moodle
           for name in $podNames; do
@@ -195,19 +199,20 @@ jobs:
               `EOF` "
           done
           export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
-          echo "${APP} is exposed at 'https://'${ROUTE}" 
+          echo "${APP} is exposed at 'https://'${ROUTE}"
 
   # Deploy App images in Test
   deployTest:
     name: Deploy APP to Test environment
     runs-on: ubuntu-latest
     environment: TEST
+    if: github.ref_name == 'test'
     env:
       BUILD_ID: ${{ github.event.number }}
       CRON_PASSWORD: ${{ secrets.CRON_PASSWORD }}
       NAMESPACE: 950003-test
       BUILD_NAMESPACE: 950003-tools
-      BRANCH: main
+      BRANCH: ${{ github.ref_name }}
       APP: moodle
       APP_HOST: moodle-950003-test.apps.silver.devops.gov.bc.ca
       DB_BACKUP_APP: db-backup
@@ -251,7 +256,7 @@ jobs:
   #           ATTEMPTS=$((attempts + 1))
   #           sleep 10
   #         done
-  #         oc project ${NAMESPACE}     
+  #         oc project ${NAMESPACE}
   #         echo "Listing pods.."
       - name: Deploy APP
         run: |
@@ -260,8 +265,8 @@ jobs:
           test -n "${BRANCH}"
           echo "Current namespace is ${NAMESPACE}"
           #oc -n ${BUILD_NAMESPACE} policy add-role-to-group system:image-puller system:serviceaccounts:${NAMESPACE}
-          #oc policy add-role-to-group view system:serviceaccounts:950003-dev -n ${NAMESPACE} 
-          #oc policy add-role-to-group edit system:serviceaccounts:950003-dev -n ${NAMESPACE} 
+          #oc policy add-role-to-group view system:serviceaccounts:950003-dev -n ${NAMESPACE}
+          #oc policy add-role-to-group edit system:serviceaccounts:950003-dev -n ${NAMESPACE}
           oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template-new.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
@@ -283,7 +288,7 @@ jobs:
                 -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
                 -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
                 -p BUILD_NAMESPACE="950003-tools" \
-                -p IMAGE_STREAM_TAG="moodle:latest" \
+                -p IMAGE_STREAM_TAG="moodle:test" \
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" \
@@ -298,7 +303,7 @@ jobs:
             ATTEMPTS=$((attempts + 1))
             sleep 10
           done
-          oc project ${NAMESPACE}     
+          oc project ${NAMESPACE}
           echo "Listing pods.."
           oc get pods|grep moodle
           sleep 30
@@ -324,21 +329,22 @@ jobs:
               `EOF` "
           done
           export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
-          echo "${APP} is exposed at 'https://'${ROUTE}" 
+          echo "${APP} is exposed at 'https://'${ROUTE}"
 
-  
-          
+
+
   # Deploy App images in Prod
   deployProd:
     name: Deploy APP to Prod environment
     runs-on: ubuntu-latest
     environment: PROD
+    if: github.ref_name == 'prod'
     env:
       BUILD_ID: ${{ github.event.number }}
       CRON_PASSWORD: ${{ secrets.CRON_PASSWORD }}
       NAMESPACE: 950003-prod
       BUILD_NAMESPACE: 950003-tools
-      BRANCH: main
+      BRANCH: ${{ github.ref_name }}
       APP: moodle
       APP_HOST: moodle-950003-prod.apps.silver.devops.gov.bc.ca
       DB_BACKUP_APP: db-backup
@@ -382,7 +388,7 @@ jobs:
       #       ATTEMPTS=$((attempts + 1))
       #       sleep 10
       #     done
-      #     oc project ${NAMESPACE}     
+      #     oc project ${NAMESPACE}
       #     echo "Listing pods.."
       - name: Deploy APP
         run: |
@@ -399,8 +405,8 @@ jobs:
                 -p MOODLE_MEMORY_LIMIT=1Gi \
                 -p PROJECT_NAMESPACE=950003-prod\
                 -p DB_SERVICE_NAME=mysql-0.mysql \
-                -p MOODLE_VOLUME_CAPACITY=15Gi \
-                -p BACKUP_VOLUME_SIZE=20Gi \
+                -p MOODLE_VOLUME_CAPACITY=10Gi \
+                -p BACKUP_VOLUME_SIZE=15Gi \
                 -p DB_NAME=moodle \
                 -p DB_USER=moodle \
                 -p HTTP_PORT=8080 \
@@ -412,7 +418,7 @@ jobs:
                 -p MOODLE_DATA_PATH="/vendor/moodle/moodledata/persistent" \
                 -p MOODLE_DATA_MOUNT_PATH="/vendor/moodle/moodledata/persistent" \
                 -p BUILD_NAMESPACE="950003-tools" \
-                -p IMAGE_STREAM_TAG="moodle:latest" \
+                -p IMAGE_STREAM_TAG="moodle:prod" \
                 -p GIT_URL="https://github.com/moodle/moodle.git" \
                 -p GIT_TAG=openshift \
                 -p GITHUB_AUTH_TOKEN="${{ secrets.AUTH_TOKEN }}" \
@@ -427,7 +433,7 @@ jobs:
             ATTEMPTS=$((attempts + 1))
             sleep 10
           done
-          oc project ${NAMESPACE}     
+          oc project ${NAMESPACE}
           echo "Listing pods.."
           oc get pods|grep moodle
           sleep 30
@@ -453,4 +459,4 @@ jobs:
               `EOF` "
           done
           export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
-          echo "${APP} is exposed at 'https://'${ROUTE}" 
+          echo "${APP} is exposed at 'https://'${ROUTE}"
