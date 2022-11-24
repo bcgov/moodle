@@ -203,7 +203,6 @@ jobs:
   deployTest:
     name: Deploy APP to Test environment
     runs-on: ubuntu-latest
-    environment: TEST
     if: github.ref_name == 'test'
     env:
       BUILD_ID: ${{ github.event.number }}
@@ -335,7 +334,6 @@ jobs:
   deployProd:
     name: Deploy APP to Prod environment
     runs-on: ubuntu-latest
-    environment: PROD
     if: github.ref_name == 'prod'
     env:
       BUILD_ID: ${{ github.event.number }}
