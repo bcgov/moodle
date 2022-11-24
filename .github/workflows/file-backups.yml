@@ -32,14 +32,16 @@ jobs:
           
           #Backup moodledata to a backup PVC pointing to /tmp/file-backups
           #Purge backups older than NO_OF_DAYS to reclaim space
-          for name in $podNames; do
-            oc exec $podNames -- bash -c "
+          # Only Exec into one pod, and place the backups in the shared and mounted backup PVC
+            oc exec ${podNames[0]} -- bash -c "
               mkdir -p /tmp/file-backups && \
-              find /tmp/file-backups/ -maxdepth 1 -mtime ${NO_OF_DAYS} -type d -exec rm -r  {} \; && \
+              find /tmp/file-backups/ -maxdepth 1 -mtime ${NO_OF_DAYS} -type f -exec rm -r  {} \; && \
               echo 'PROJECT NAMESPACE is: '  ${{ matrix.namespace }} && \
-              rsync -rz /vendor/moodle/moodledata/persistent/filedir/ /tmp/file-backups/filedir-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S") && \
+              zip -r /tmp/file-backups/filedir-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").zip /vendor/moodle/moodledata/persistent/filedir
               if [ -d "/vendor/moodle/moodledata/persistent/models" ]; then
-                rsync -rz /vendor/moodle/moodledata/persistent/models/ /tmp/file-backups/models-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S") 
+                zip -r /tmp/file-backups/models-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").zip  /vendor/moodle/moodledata/persistent/models 
+              fi
+              if [ -d "/vendor/moodle/moodledata/persistent/lang" ]; then
+                zip -r /tmp/file-backups/lang-${{ matrix.namespace }}-$(date "+%Y.%m.%d-%H.%M.%S").zip  /vendor/moodle/moodledata/persistent/lang 
               fi
               "
-          done

@@ -217,13 +217,13 @@
                 "resources": {
                   "limits": {
                     "memory": "${MOODLE_MEMORY_LIMIT}",
-                    "cpu": "500m"
+                    "cpu": "1500m"
                   },
                   "requests": {
-                    "memory": "${MOODLE_MEMORY_LIMIT}",
-                    "cpu": "100m"
+                    "memory": "4Gi",
+                    "cpu": "1000m"
                   }
-                },              
+                },
                 "env": [
                   {
                     "name": "APP_NAME",
@@ -433,7 +433,7 @@
       "description": "Image registry",
       "displayName": "Image Registry",
       "name": "IMAGE_REGISTRY",
-      "value": "image-registry.openshift-image-registry.svc:5000"	    
+      "value": "image-registry.openshift-image-registry.svc:5000"
     },
     {
       "description": "Build namespace.",
