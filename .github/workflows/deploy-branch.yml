@@ -216,7 +216,7 @@ jobs:
       DB_BACKUP_APP: db-backup
       DB_NAME: moodle
     needs:
-      - deployDev
+      - build
     steps:
        # - name: Print env
        #   run: |
@@ -348,7 +348,7 @@ jobs:
       DB_BACKUP_APP: db-backup
       DB_NAME: moodle
     needs:
-      - deployTest
+      - build
     steps:
        # - name: Print env
        #   run: |
