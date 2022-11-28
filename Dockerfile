@@ -11,6 +11,7 @@ ENV HVP_BRANCH_VERSION stable
 ENV FORMAT_BRANCH_VERSION MOODLE_311
 ENV CERTIFICATE_BRANCH_VERSION MOODLE_31_STABLE
 ENV CUSTOMCERT_BRANCH_VERSION MOODLE_311_STABLE
+ENV DATAFLOWS_BRANCH_VERSION MOODLE_35_STABLE-nestedloopfix
 
 WORKDIR /
 
@@ -67,7 +68,7 @@ RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     chown -R www-data:www-data /vendor/moodle/moodle/course/format/
 
 RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger && \
-    git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_dataflows.git /vendor/moodle/moodle/admin/tool/dataflows && \
+    git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows.git /vendor/moodle/moodle/admin/tool/dataflows && \
     git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface && \
     git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && \
     git clone --recurse-submodules --jobs 8 --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll /vendor/moodle/moodle/course/format/topcoll && \
