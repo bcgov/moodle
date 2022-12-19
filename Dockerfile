@@ -1,4 +1,5 @@
 # syntax = docker/dockerfile:1.2
+
 # Build intermediate container to handle Github token
 FROM aro.jfrog.io/moodle/php:7.4-apache as composer
 
@@ -47,13 +48,11 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 
 # Add Github Auth token for Composer build, then install (GITHUB_AUTH_TOKEN.txt should be in root directory and contain the token only)
 RUN --mount=type=secret,id=GITHUB_AUTH_TOKEN \
-composer config -g github-oauth.github.com $GITHUB_AUTH_TOKEN
+  composer config -g github-oauth.github.com $GITHUB_AUTH_TOKEN
 
 RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 
 # Add plugins (try to add these via composer later)
-#RUN mkdir -p /vendor/moodle
-
 RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
 
 RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
@@ -75,11 +74,9 @@ RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-t
     git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate /vendor/moodle/moodle/mod/certificate && \
     git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert /vendor/moodle/moodle/mod/customcert
 
-# RUN git submodule update --init
 
 ##################################################
 ##################################################
-
 
 
 # Build Moodle image
@@ -87,6 +84,7 @@ FROM aro.jfrog.io/moodle/php:7.4-apache as moodle
 
 ARG CONTAINER_PORT=8080
 ARG ENV_FILE=""
+ARG CRONTAB="FALSE"
 
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 ENV VENDOR=/vendor/
@@ -128,36 +126,29 @@ RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false;
 
-
-# Enable PHP extensions - full list:
-# bcmath bz2 calendar ctype curl dba dom enchant exif fileinfo filter ftp gd gettext gmp hash iconv imap interbase intl json ldap mbstring mysqli oci8 odbc opcache pcntl pdo pdo_dblib pdo_firebird pdo_mysql pdo_oci pdo_odbc pdo_pgsql pdo_sqlite pgsql phar posix pspell readline recode reflection session shmop simplexml snmp soap sockets sodium spl standard sysvmsg sysvsem sysvshm tidy tokenizer wddx xml xmlreader xmlrpc xmlwriter xsl zend_test zip
-
-ENV PHP_EXTENSIONS="mysqli xmlrpc soap zip bcmath bz2 exif ftp gd gettext intl opcache shmop sysvmsg sysvsem sysvshm"
-
-#RUN docker-php-ext-install $PHP_EXTENTIONS  && \
-#    docker-php-ext-enable $PHP_EXTENTIONS
-RUN apt-get install libxml2-dev -y
-RUN apt-get install libzip-dev -y
+RUN apt-get install libxml2-dev libzip-dev -y
 RUN apt-get update && apt-get install -y libbz2-dev
 
 #Install rsync
 RUN apt-get install rsync -y
 
-RUN apt-get install cron -y && \
-    apt-get install libfreetype6-dev -y && \
-    apt-get install libjpeg-dev \libpng-dev -y && \
-    apt-get install libpq-dev -y && \
-    apt-get install libssl-dev -y && \
-    apt-get install ca-certificates -y && \
-    apt-get install libcurl4-openssl-dev -y && \
-    apt-get install libgd-tools -y && \
-    apt-get install libmcrypt-dev -y && \
-    apt-get install zip -y && \
-    apt-get install default-mysql-client -y && \
-    apt-get install vim -y && \
-    apt-get install wget -y && \
-    apt-get install graphviz -y && \
-    apt-get install libbz2-dev -y
+RUN apt-get install cron \
+    supervisor \
+    libfreetype6-dev \
+    libjpeg-dev \
+    \libpng-dev \
+    libpq-dev \
+    libssl-dev \
+    ca-certificates \
+    libcurl4-openssl-dev \
+    libgd-tools \
+    libmcrypt-dev \
+    zip \
+    default-mysql-client \
+    vim \
+    wget \
+    graphviz \
+    libbz2-dev -y -qq
 
 RUN docker-php-ext-install mysqli && \
     docker-php-ext-install xmlrpc && \
@@ -197,7 +188,6 @@ RUN { \
 
 # Copy files from intermediate build
 COPY  --chown=www-data:www-data --from=composer $VENDOR $VENDOR
-###COPY  --chown=www-data:www-data --from=composer /usr/local/bin/composer /usr/local/bin/composer
 
 WORKDIR /
 
@@ -207,7 +197,6 @@ COPY .env$ENV_FILE ./.env
 USER root
 
 # Use ONE of these - High Availability (-ha-readonly) or standard
-#COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
 COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
 # COPY /app/config/sync/apache.conf /etc/apache2/sites-enabled/000-default.conf
@@ -235,11 +224,18 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
     chgrp -R 0 /vendor/moodle/moodle/mod && \
     chmod -R g=u /vendor/moodle/moodle/mod
 
-# Copy plugins (not working from composer.json 'yet')
-# COPY --chown=www-data:www-data app/config/sync/moodle/plugins/mod/. /vendor/moodle/moodle/mod
-# COPY --chown=www-data:www-data app/config/sync/moodle/plugins/admin/tool/. /vendor/moodle/moodle/admin/tool
+# Setup Cron
+COPY ./app/config/sync/moodle/moodle-cron.txt /etc/cron.d/moodle-cron
+RUN touch /var/log/cron.log
+RUN chown www-data:www-data /var/log/cron.log
+RUN chown www-data:www-data /var/run/
+RUN crontab -u www-data /etc/cron.d/moodle-cron
+RUN chmod gu+rw /var/run
+RUN chmod gu+s /usr/sbin/cron
 
-
-#ENTRYPOINT [ "/etc/init.d/apache2", "start"]
-ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
-
+# Configure and run supervisor (which runs apache + cron)
+COPY app/config/sync/moodle/supervisord.conf /etc/supervisor/supervisord.conf
+RUN chown www-data:www-data /etc/supervisor/supervisord.conf
+RUN usermod -s /bin/bash www-data
+USER www-data
+CMD /usr/bin/supervisord
