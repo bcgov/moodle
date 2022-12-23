@@ -1,5 +1,4 @@
 # syntax = docker/dockerfile:1.2
-
 # Build intermediate container to handle Github token
 FROM aro.jfrog.io/moodle/php:7.4-apache as composer
 
@@ -48,11 +47,13 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 
 # Add Github Auth token for Composer build, then install (GITHUB_AUTH_TOKEN.txt should be in root directory and contain the token only)
 RUN --mount=type=secret,id=GITHUB_AUTH_TOKEN \
-  composer config -g github-oauth.github.com $GITHUB_AUTH_TOKEN
+composer config -g github-oauth.github.com $GITHUB_AUTH_TOKEN
 
 RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 
 # Add plugins (try to add these via composer later)
+#RUN mkdir -p /vendor/moodle
+
 RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
 
 RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
@@ -74,6 +75,7 @@ RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-t
     git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate /vendor/moodle/moodle/mod/certificate && \
     git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert /vendor/moodle/moodle/mod/customcert
 
+# RUN git submodule update --init
 
 ##################################################
 ##################################################
@@ -90,7 +92,6 @@ ARG DB_HOST="localhost"
 ARG DB_NAME="moodle"
 ARG DB_PASSWORD=""
 ARG DB_USER="moodle"
-
 
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 ENV VENDOR=/vendor/
@@ -132,29 +133,36 @@ RUN ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false;
 
-RUN apt-get install libxml2-dev libzip-dev -y
+
+# Enable PHP extensions - full list:
+# bcmath bz2 calendar ctype curl dba dom enchant exif fileinfo filter ftp gd gettext gmp hash iconv imap interbase intl json ldap mbstring mysqli oci8 odbc opcache pcntl pdo pdo_dblib pdo_firebird pdo_mysql pdo_oci pdo_odbc pdo_pgsql pdo_sqlite pgsql phar posix pspell readline recode reflection session shmop simplexml snmp soap sockets sodium spl standard sysvmsg sysvsem sysvshm tidy tokenizer wddx xml xmlreader xmlrpc xmlwriter xsl zend_test zip
+
+ENV PHP_EXTENSIONS="mysqli xmlrpc soap zip bcmath bz2 exif ftp gd gettext intl opcache shmop sysvmsg sysvsem sysvshm"
+
+#RUN docker-php-ext-install $PHP_EXTENTIONS  && \
+#    docker-php-ext-enable $PHP_EXTENTIONS
+RUN apt-get install libxml2-dev -y
+RUN apt-get install libzip-dev -y
 RUN apt-get update && apt-get install -y libbz2-dev
 
 #Install rsync
 RUN apt-get install rsync -y
 
-RUN apt-get install cron \
-    supervisor \
-    libfreetype6-dev \
-    libjpeg-dev \
-    \libpng-dev \
-    libpq-dev \
-    libssl-dev \
-    ca-certificates \
-    libcurl4-openssl-dev \
-    libgd-tools \
-    libmcrypt-dev \
-    zip \
-    default-mysql-client \
-    vim \
-    wget \
-    graphviz \
-    libbz2-dev -y -qq
+RUN apt-get install cron -y && \
+    apt-get install libfreetype6-dev -y && \
+    apt-get install libjpeg-dev \libpng-dev -y && \
+    apt-get install libpq-dev -y && \
+    apt-get install libssl-dev -y && \
+    apt-get install ca-certificates -y && \
+    apt-get install libcurl4-openssl-dev -y && \
+    apt-get install libgd-tools -y && \
+    apt-get install libmcrypt-dev -y && \
+    apt-get install zip -y && \
+    apt-get install default-mysql-client -y && \
+    apt-get install vim -y && \
+    apt-get install wget -y && \
+    apt-get install graphviz -y && \
+    apt-get install libbz2-dev -y
 
 RUN docker-php-ext-install mysqli && \
     docker-php-ext-install xmlrpc && \
@@ -194,6 +202,7 @@ RUN { \
 
 # Copy files from intermediate build
 COPY  --chown=www-data:www-data --from=composer $VENDOR $VENDOR
+###COPY  --chown=www-data:www-data --from=composer /usr/local/bin/composer /usr/local/bin/composer
 
 WORKDIR /
 
@@ -203,6 +212,7 @@ COPY .env$ENV_FILE ./.env
 USER root
 
 # Use ONE of these - High Availability (-ha-readonly) or standard
+#COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
 COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
 # Find/replace config values to make the file solid for CLI/Cron (not using ENV vars)
