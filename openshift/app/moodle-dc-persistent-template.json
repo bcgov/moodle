@@ -1,5 +1,5 @@
 {
-  "apiVersion": "v1",
+  "apiVersion": "template.openshift.io/v1",
   "kind": "Template",
   "labels": {
     "template": "${APP_NAME}"
@@ -13,7 +13,7 @@
       "openshift.io/long-description": "This template provides a standalone Moodle server (PHP, Moodle).  The application cache is stored on persistent storage.  The database name, username, and password are chosen via parameters when provisioning this service.",
       "tags": "application,${APP_NAME}"
     },
-    "name": "moodle-persistent"
+    "name": "${NAME}"
   },
   "objects": [
     {
@@ -107,6 +107,41 @@
       }
     },
     {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "file-backup-data"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteMany"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "${BACKUP_VOLUME_SIZE}"
+          }
+        },
+        "storageClassName": "netapp-file-backup"
+      }
+    },
+    {
+      "kind": "PersistentVolumeClaim",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "env-data"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteMany"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "250Mi"
+          }
+        }
+      }
+    },
+    {
       "apiVersion": "v1",
       "kind": "DeploymentConfig",
       "metadata": {
@@ -143,17 +178,21 @@
           "spec": {
             "containers": [
               {
-                "image": "${BUILD_IMAGE}",
+                "image": "${IMAGE_REGISTRY}/${BUILD_NAMESPACE}/${IMAGE_STREAM_TAG}",
                 "name": "${APP_NAME}",
                 "restartPolicy": "Always",
                 "imagePullPolicy": "Always",
                 "livenessProbe": {
-                  "exec": {
-                    "command": ["/usr/local/bin/php", "/vendor/moodle/moodle/admin/cli/cron.php"]
+                  "httpGet": {
+                    "path": "https://${SITE_URL}",
+                    "port": 8080,
+                    "scheme": "HTTP"
                   },
-                  "initialDelaySeconds": 60,
+                  "initialDelaySeconds": 90,
                   "periodSeconds": 60,
-                  "timeoutSeconds": 120
+                  "timeoutSeconds": 180,
+                  "successThreshold": 1,
+                  "failureThreshold": 3
                 },
                 "ports": [
                   {
@@ -164,16 +203,25 @@
                   {
                     "mountPath": "${MOODLE_DATA_MOUNT_PATH}",
                     "name": "${APP_NAME}-data"
+                  },
+                  {
+                    "mountPath": "/tmp/file-backups",
+                    "name": "file-backup-data"
+                  },
+                  {
+                    "name": "env-data",
+                    "mountPath": "/.env",
+                    "subPath": ".env"
                   }
                 ],
                 "resources": {
                   "limits": {
                     "memory": "${MOODLE_MEMORY_LIMIT}",
-                    "cpu": "500m"
+                    "cpu": "1500m"
                   },
                   "requests": {
-                    "memory": "${MOODLE_MEMORY_LIMIT}",
-                    "cpu": "100m"
+                    "memory": "4Gi",
+                    "cpu": "1000m"
                   }
                 },
                 "env": [
@@ -217,6 +265,11 @@
                     "name": "DB_HOST",
                     "value": "${DB_HOST}"
                   },
+		  {
+                    "name": "DB_SECONDARY_NAME",
+                    "value": "${DB_SECONDARY_NAME}"
+                  },
+
                   {
                     "name": "DB_PORT",
                     "value": "${DB_PORT}"
@@ -233,7 +286,7 @@
                     "name": "DB_USER",
                     "valueFrom": {
                       "secretKeyRef": {
-                        "name": "moodle-secrets",
+                        "name": "${APP_NAME}-secrets",
                         "key": "database-user"
                       }
                     }
@@ -242,7 +295,7 @@
                     "name": "DB_PASSWORD",
                     "valueFrom": {
                       "secretKeyRef": {
-                        "name": "moodle-secrets",
+                        "name": "${APP_NAME}-secrets",
                         "key": "database-password"
                       }
                     }
@@ -268,7 +321,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "key": "database-user",
-                        "name": "${DB_SERVICE_NAME}"
+                        "name": "${APP_NAME}-secrets"
                       }
                     }
                   },
@@ -277,7 +330,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "key": "database-password",
-                        "name": "${DB_SERVICE_NAME}"
+                        "name": "${APP_NAME}-secrets"
                       }
                     }
                   },
@@ -286,7 +339,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "key": "database-root-password",
-                        "name": "${DB_SERVICE_NAME}"
+                        "name": "${APP_NAME}-secrets"
                       }
                     }
                   },
@@ -295,7 +348,7 @@
                     "valueFrom": {
                       "secretKeyRef": {
                         "key": "database-name",
-                        "name": "${DB_SERVICE_NAME}"
+                        "name": "${APP_NAME}-secrets"
                       }
                     }
                   }
@@ -310,10 +363,28 @@
                 }
               },
               {
+                "name": "file-backup-data",
+                "persistentVolumeClaim": {
+                  "claimName": "file-backup-data"
+                }
+              },
+              {
                 "name": "${APP_NAME}-config",
                 "configMap": {
                   "name": "${APP_NAME}-config",
                   "defaultMode": 420
+                }
+              },
+              {
+                "name": "env-data",
+                "configMap": {
+                  "name": "moodle-env",
+                  "items": [
+                    {
+                      "key": ".env",
+                      "path": ".env"
+                    }
+                  ]
                 }
               }
             ]
@@ -345,13 +416,6 @@
       "value": "${SITE_NAME}"
     },
     {
-      "description": "Build image location.",
-      "displayName": "Build Image",
-      "name": "BUILD_IMAGE",
-      "required": true,
-      "value": "${BUILD_IMAGE}"
-    },
-    {
       "description": "Moodle data path.",
       "displayName": "Moodle Data Path",
       "name": "MOODLE_DATA_PATH",
@@ -366,6 +430,24 @@
       "value": "${SITE_URL}"
     },
     {
+      "description": "Image registry",
+      "displayName": "Image Registry",
+      "name": "IMAGE_REGISTRY",
+      "value": "image-registry.openshift-image-registry.svc:5000"
+    },
+    {
+      "description": "Build namespace.",
+      "displayName": "Build Namespace",
+      "required": true,
+      "name": "BUILD_NAMESPACE"
+    },
+    {
+      "description": "Image stream tag",
+      "displayName": "Image Stream Tag",
+      "required": true,
+      "name": "IMAGE_STREAM_TAG"
+    },
+    {
       "description": "Maximum amount of memory the container can use.",
       "displayName": "Memory Limit",
       "name": "MOODLE_MEMORY_LIMIT",
@@ -378,6 +460,13 @@
       "name": "MOODLE_VOLUME_CAPACITY",
       "required": true,
       "value": "${MOODLE_VOLUME_CAPACITY}"
+    },
+    {
+      "description": "Volume for storing file backups",
+      "displayName": "Moodle File backups",
+      "name": "BACKUP_VOLUME_SIZE",
+      "required": true,
+      "value": "${BACKUP_VOLUME_SIZE}"
     },
     {
       "description": "Path where the persistent volume will be mounted",
@@ -414,6 +503,14 @@
       "required": true,
       "value": "${DB_HOST}"
     },
+    {
+      "description": "Database secondary host name.",
+      "displayName": "DB Secondary Host",
+      "name": "DB_SECONDARY_NAME",
+      "required": true,
+      "value": "${DB_SECONDARY_NAME}"
+    },
+
     {
       "description": "Database Port opened for connections from other containers.",
       "displayName": "DB Port",
@@ -482,6 +579,13 @@
       "name": "GITHUB_AUTH_TOKEN",
       "required": true,
       "value": "${GITHUB_AUTH_TOKEN}"
+    },
+    {
+      "description": "Cron Password",
+      "displayName": "Cron Password",
+      "name": "CRON_PASSWORD",
+      "required": true,
+      "value": "${CRON_PASSWORD}"
     }
   ]
 }

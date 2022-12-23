@@ -85,6 +85,12 @@ FROM aro.jfrog.io/moodle/php:7.4-apache as moodle
 ARG CONTAINER_PORT=8080
 ARG ENV_FILE=""
 ARG CRONTAB="FALSE"
+ARG SITE_URL=""
+ARG DB_HOST="localhost"
+ARG DB_NAME="moodle"
+ARG DB_PASSWORD=""
+ARG DB_USER="moodle"
+
 
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 ENV VENDOR=/vendor/
@@ -199,8 +205,16 @@ USER root
 # Use ONE of these - High Availability (-ha-readonly) or standard
 COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
+# Find/replace config values to make the file solid for CLI/Cron (not using ENV vars)
+RUN sed -i "s|SITE_URL|${SITE_URL}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_HOST|${DB_HOST}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_NAME|${DB_NAME}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_USER|${DB_USER}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_PASSWORD|${DB_PASSWORD}|" /vendor/moodle/moodle/config.php
+
 # COPY /app/config/sync/apache.conf /etc/apache2/sites-enabled/000-default.conf
 COPY --chown=www-data:www-data app/config/sync/apache2.conf /etc/apache2/apache2.conf
+COPY --chown=www-data:www-data app/config/sync/apache2-mods-available-mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 COPY --chown=www-data:www-data app/config/sync/ports.conf /etc/apache2/ports.conf
 COPY --chown=www-data:www-data app/config/sync/web-root.htaccess /vendor/moodle/moodle/.htaccess
 COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/local/etc/php/php.ini
@@ -224,18 +238,4 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
     chgrp -R 0 /vendor/moodle/moodle/mod && \
     chmod -R g=u /vendor/moodle/moodle/mod
 
-# Setup Cron
-COPY ./app/config/sync/moodle/moodle-cron.txt /etc/cron.d/moodle-cron
-RUN touch /var/log/cron.log
-RUN chown www-data:www-data /var/log/cron.log
-RUN chown www-data:www-data /var/run/
-RUN crontab -u www-data /etc/cron.d/moodle-cron
-RUN chmod gu+rw /var/run
-RUN chmod gu+s /usr/sbin/cron
-
-# Configure and run supervisor (which runs apache + cron)
-COPY app/config/sync/moodle/supervisord.conf /etc/supervisor/supervisord.conf
-RUN chown www-data:www-data /etc/supervisor/supervisord.conf
-RUN usermod -s /bin/bash www-data
-USER www-data
-CMD /usr/bin/supervisord
+ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
