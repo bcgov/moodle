@@ -68,7 +68,7 @@ jobs:
                 -p BASE_IMAGE_REPO="aro.jfrog.io/moodle/" \
                 -p GITHUB_AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} \
                 -p DB_HOST="mysql-0.mysql" \
-                -p DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+                -p DB_PASSWORD="${{ secrets.DB_PASSWORD_ESCAPED }}" \
                 -p DB_USER="moodle" \
                 -p DB_NAME="moodle" \
                 -p SOURCE_CONTEXT_DIR=. \
