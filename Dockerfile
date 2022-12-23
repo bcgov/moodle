@@ -88,7 +88,6 @@ FROM aro.jfrog.io/moodle/php:7.4-apache as moodle
 ARG CONTAINER_PORT=8080
 ARG ENV_FILE=""
 ARG CRONTAB="FALSE"
-ARG SITE_URL=""
 ARG DB_HOST="localhost"
 ARG DB_NAME="moodle"
 ARG DB_PASSWORD=""
@@ -217,7 +216,6 @@ USER root
 COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
 # Find/replace config values to make the file solid for CLI/Cron (not using ENV vars)
-RUN sed -i "s|SITE_URL|${SITE_URL}|" /vendor/moodle/moodle/config.php
 RUN sed -i "s|DB_HOST|${DB_HOST}|" /vendor/moodle/moodle/config.php
 RUN sed -i "s|DB_NAME|${DB_NAME}|" /vendor/moodle/moodle/config.php
 RUN sed -i "s|DB_USER|${DB_USER}|" /vendor/moodle/moodle/config.php
