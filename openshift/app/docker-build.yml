@@ -106,7 +106,7 @@ parameters:
   - name: GITHUB_AUTH_TOKEN
     required: true
   - name: SITE_URL
-    required: true
+    required: false
   - name: DB_HOST
     required: true
   - name: DB_NAME
