@@ -81,6 +81,7 @@ RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-t
 ##################################################
 
 
+
 # Build Moodle image
 FROM aro.jfrog.io/moodle/php:7.4-apache as moodle
 
