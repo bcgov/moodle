@@ -81,12 +81,17 @@ RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-t
 ##################################################
 
 
-
 # Build Moodle image
 FROM aro.jfrog.io/moodle/php:7.4-apache as moodle
 
 ARG CONTAINER_PORT=8080
 ARG ENV_FILE=""
+ARG CRONTAB="FALSE"
+ARG SITE_URL=""
+ARG DB_HOST="localhost"
+ARG DB_NAME="moodle"
+ARG DB_PASSWORD=""
+ARG DB_USER="moodle"
 
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 ENV VENDOR=/vendor/
@@ -210,8 +215,16 @@ USER root
 #COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
 COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
+# Find/replace config values to make the file solid for CLI/Cron (not using ENV vars)
+RUN sed -i "s|SITE_URL|${SITE_URL}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_HOST|${DB_HOST}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_NAME|${DB_NAME}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_USER|${DB_USER}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_PASSWORD|${DB_PASSWORD}|" /vendor/moodle/moodle/config.php
+
 # COPY /app/config/sync/apache.conf /etc/apache2/sites-enabled/000-default.conf
 COPY --chown=www-data:www-data app/config/sync/apache2.conf /etc/apache2/apache2.conf
+COPY --chown=www-data:www-data app/config/sync/apache2-mods-available-mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 COPY --chown=www-data:www-data app/config/sync/ports.conf /etc/apache2/ports.conf
 COPY --chown=www-data:www-data app/config/sync/web-root.htaccess /vendor/moodle/moodle/.htaccess
 COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/local/etc/php/php.ini
@@ -235,11 +248,4 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
     chgrp -R 0 /vendor/moodle/moodle/mod && \
     chmod -R g=u /vendor/moodle/moodle/mod
 
-# Copy plugins (not working from composer.json 'yet')
-# COPY --chown=www-data:www-data app/config/sync/moodle/plugins/mod/. /vendor/moodle/moodle/mod
-# COPY --chown=www-data:www-data app/config/sync/moodle/plugins/admin/tool/. /vendor/moodle/moodle/admin/tool
-
-
-#ENTRYPOINT [ "/etc/init.d/apache2", "start"]
 ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
-
