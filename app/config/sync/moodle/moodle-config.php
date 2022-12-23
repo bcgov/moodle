@@ -23,7 +23,7 @@ $CFG->dboptions = array (
   'dbcollation' => 'utf8mb4_unicode_ci',
 );
 
-$CFG->wwwroot   = 'SITE_URL';
+$CFG->wwwroot   = (isset($_ENV['SITE_URL'])) ? $_ENV['SITE_URL'] : 'https://moodle-950003-dev.apps.silver.devops.gov.bc.ca';
 $CFG->dataroot  = '/vendor/moodle/moodledata/persistent';
 $CFG->admin     = 'admin';
 $CFG->alternateloginurl  = (isset($_ENV['ALTERNATE_LOGIN_URL'])) ? $_ENV['ALTERNATE_LOGIN_URL'] : '';
