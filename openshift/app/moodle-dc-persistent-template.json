@@ -265,7 +265,7 @@
                     "name": "DB_HOST",
                     "value": "${DB_HOST}"
                   },
-		  {
+		              {
                     "name": "DB_SECONDARY_NAME",
                     "value": "${DB_SECONDARY_NAME}"
                   },
