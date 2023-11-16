@@ -11,7 +11,9 @@ Run the latest build
 Trigger build
 Kick to upgrade dataflows plugin
 Kick to upgrade dataflows plugin, again
-Kick to upgrade dataflows plugin and moodle
-Kick to upgrade dataflows plugin and moodle
-Kick to upgrade dataflows plugin to PR740
-
+Kick to upgrade dataflows plugin
+again
+Kick to upgrade dataflows plugin
+Kick to update dataflows plugin
+Into dev branch this time
+Kick to update dataflows plugin to get PR740 changes so that v4 timestamp check flow works
