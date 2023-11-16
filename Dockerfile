@@ -5,13 +5,13 @@ FROM aro.jfrog.io/moodle/php:7.4-apache as composer
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 
 # Version control for Moodle and plugins
-ENV MOODLE_BRANCH_VERSION MOODLE_311_STABLE
-ENV F2F_BRANCH_VERSION MOODLE_311_STABLE
+ENV MOODLE_BRANCH_VERSION MOODLE_403_STABLE
+ENV F2F_BRANCH_VERSION MOODLE_400_STABLE
 ENV HVP_BRANCH_VERSION stable
-ENV FORMAT_BRANCH_VERSION MOODLE_311
+ENV FORMAT_BRANCH_VERSION MOODLE_402
 ENV CERTIFICATE_BRANCH_VERSION MOODLE_31_STABLE
-ENV CUSTOMCERT_BRANCH_VERSION MOODLE_311_STABLE
-ENV DATAFLOWS_BRANCH_VERSION MOODLE_35_STABLE
+ENV CUSTOMCERT_BRANCH_VERSION MOODLE_402_STABLE
+ENV DATAFLOWS_BRANCH_VERSION MOODLE_401_STABLE
 
 WORKDIR /
 
@@ -188,6 +188,9 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-enable zip && \
     docker-php-ext-configure intl && \
     docker-php-ext-configure gd --with-freetype --with-jpeg
+
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions
 
 RUN { \
 		echo 'opcache.enable_cli=1'; \
