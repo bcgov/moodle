@@ -65,7 +65,7 @@ jobs:
                 -p BASE_IMAGE_NAME="php" \
                 -p BASE_IMAGE_TAG="8.2-apache" \
                 -p SITE_URL="https://moodle-950003-${BUILD_TAG}.apps.silver.devops.gov.bc.ca" \
-                -p BASE_IMAGE_REPO="aro.jfrog.io/moodle/" \
+                -p BASE_IMAGE_REPO="" \
                 -p GITHUB_AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} \
                 -p DB_HOST="mysql-0.mysql" \
                 -p DB_PASSWORD="${{ secrets.DB_PASSWORD_ESCAPED }}" \
