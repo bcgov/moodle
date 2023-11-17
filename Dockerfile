@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 # Build intermediate container to handle Github token
-FROM php:8.2-apache as composer
+FROM aro.jfrog.io/moodle/php:8.2-apache as composer
 
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 
@@ -84,7 +84,7 @@ RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-t
 
 
 # Build Moodle image
-FROM php:8.2-apache as moodle
+FROM aro.jfrog.io/moodle/php:8.2-apache as moodle
 
 ARG CONTAINER_PORT=8080
 ARG ENV_FILE=""
@@ -147,7 +147,8 @@ RUN apt-get install libzip-dev -y
 RUN apt-get update && apt-get install -y libbz2-dev
 
 #Install rsync
-RUN apt-get install rsync -y
+RUN apt-get install rsync -y \
+  && pecl install channel://pecl.php.net/xmlrpc-1.0.0RC3
 
 RUN apt-get install cron -y && \
     apt-get install libfreetype6-dev -y && \
@@ -166,7 +167,6 @@ RUN apt-get install cron -y && \
     apt-get install libbz2-dev -y
 
 RUN docker-php-ext-install mysqli && \
-    docker-php-ext-install xmlrpc && \
     docker-php-ext-install soap && \
     docker-php-ext-install zip && \
     docker-php-ext-install bcmath && \
