@@ -223,10 +223,10 @@ RUN sed -i "s|DB_USER|${DB_USER}|" /vendor/moodle/moodle/config.php
 RUN sed -i "s|DB_PASSWORD|${DB_PASSWORD}|" /vendor/moodle/moodle/config.php
 
 # COPY /app/config/sync/apache.conf /etc/apache2/sites-enabled/000-default.conf
-COPY --chown=www-data:www-data app/config/sync/apache2.conf /etc/apache2/apache2.conf
-COPY --chown=www-data:www-data app/config/sync/apache2-mods-available-mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
-COPY --chown=www-data:www-data app/config/sync/ports.conf /etc/apache2/ports.conf
-COPY --chown=www-data:www-data app/config/sync/web-root.htaccess /vendor/moodle/moodle/.htaccess
+COPY --chown=www-data:www-data app/config/sync/apache/apache2.conf /etc/apache2/apache2.conf
+COPY --chown=www-data:www-data app/config/sync/apache/apache2-mods-available-mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
+COPY --chown=www-data:www-data app/config/sync/apache/ports.conf /etc/apache2/ports.conf
+COPY --chown=www-data:www-data app/config/sync/apache/web-root.htaccess /vendor/moodle/moodle/.htaccess
 COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/local/etc/php/php.ini
 
 # Setup Permissions for www user
@@ -252,4 +252,4 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
     chgrp -R 0 /var/run/apache2 && \
     chmod -R g=u /var/run/apache2
 
-ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
+# ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
