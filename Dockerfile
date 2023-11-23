@@ -247,6 +247,8 @@ RUN rm -rf /vendor/moodle/moodle/.htaccess && \
     chown -R www-data:www-data /vendor/moodle/moodle/mod && \
     chgrp -R 0 /vendor/moodle/moodle/mod && \
     chmod -R g=u /vendor/moodle/moodle/mod && \
-    chown -R www-data:www-data /var/run/apache2
+    chown -R www-data:www-data /var/run/apache2 && \
+    chgrp -R 0 /var/run/apache2 && \
+    chmod -R g=u /var/run/apache2
 
 ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
