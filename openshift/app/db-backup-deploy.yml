@@ -132,7 +132,7 @@ objects:
 parameters:
   - name: NAME
     required: true
-  - name: PROJECT 
+  - name: PROJECT
     value: Moodle
   - name: SERVICE_NAME
     value: db-backup
@@ -149,7 +149,7 @@ parameters:
   - name: PORT
     value: "3306"
   - name: DB_SERVICE
-    value: mysql-0.mysql
+    value: db
   - name: DB_SECRET_NAME
     value: moodle-secrets
   - name: DB_USERNAME_KEY
@@ -161,7 +161,7 @@ parameters:
   - name: APP_DB
     value: court-interpreter-scheduling
   - name: IMAGE_STREAM_TAG
-    required: true  
+    required: true
   - name: BUILD_NAMESPACE
     required: true
   - name: IMAGE_REGISTRY

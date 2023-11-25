@@ -1,7 +1,7 @@
 ENV_NAME ?= dev
 
 SSL_PROXY=true
-DB_HOST="mysql-0.mysql"
+DB_HOST="db"
 
 
 ifeq ($(ENV_NAME), dev)

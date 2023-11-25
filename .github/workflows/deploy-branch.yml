@@ -67,7 +67,7 @@ jobs:
                 -p SITE_URL="https://moodle-950003-${BUILD_TAG}.apps.silver.devops.gov.bc.ca" \
                 -p BASE_IMAGE_REPO="" \
                 -p GITHUB_AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} \
-                -p DB_HOST="mysql-0.mysql" \
+                -p DB_HOST="db" \
                 -p DB_PASSWORD="${{ secrets.DB_PASSWORD_ESCAPED }}" \
                 -p DB_USER="moodle" \
                 -p DB_NAME="moodle" \
@@ -112,11 +112,11 @@ jobs:
           oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
-                -p DB_HOST=mysql-0.mysql \
+                -p DB_HOST=db \
                 -p DB_SECONDARY_NAME=mysql-read \
                 -p MOODLE_MEMORY_LIMIT=4Gi \
                 -p PROJECT_NAMESPACE=950003-dev \
-                -p DB_SERVICE_NAME=mysql-0.mysql \
+                -p DB_SERVICE_NAME=db \
                 -p MOODLE_VOLUME_CAPACITY=10Gi \
                 -p BACKUP_VOLUME_SIZE=25Gi \
                 -p DB_NAME=moodle \
@@ -154,7 +154,7 @@ jobs:
               DB_PASSWORD=${{ secrets.DB_PASSWORD }}
               SSL_PROXY=true
               SITE_URL=https://moodle-950003-dev.apps.silver.devops.gov.bc.ca
-              DB_HOST=mysql-0.mysql
+              DB_HOST=db
               `EOF` "
           done
           export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
@@ -195,11 +195,11 @@ jobs:
           oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
-                -p DB_HOST=mysql-0.mysql \
+                -p DB_HOST=db \
                 -p DB_SECONDARY_NAME=mysql-read \
                 -p MOODLE_MEMORY_LIMIT=6Gi \
                 -p PROJECT_NAMESPACE=950003-test\
-                -p DB_SERVICE_NAME=mysql-0.mysql \
+                -p DB_SERVICE_NAME=db \
                 -p MOODLE_VOLUME_CAPACITY=10Gi \
                 -p BACKUP_VOLUME_SIZE=25Gi \
                 -p DB_NAME=moodle \
@@ -244,7 +244,7 @@ jobs:
               DB_PASSWORD=${{ secrets.DB_PASSWORD }}
               SSL_PROXY=true
               SITE_URL=https://moodle-950003-test.apps.silver.devops.gov.bc.ca
-              DB_HOST=mysql-0.mysql
+              DB_HOST=db
               `EOF` "
           done
           export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
@@ -286,11 +286,11 @@ jobs:
           oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
-                -p DB_HOST=mysql-0.mysql \
+                -p DB_HOST=db \
                 -p DB_SECONDARY_NAME=mysql-read \
                 -p MOODLE_MEMORY_LIMIT=4Gi \
                 -p PROJECT_NAMESPACE=950003-prod\
-                -p DB_SERVICE_NAME=mysql-0.mysql \
+                -p DB_SERVICE_NAME=db \
                 -p MOODLE_VOLUME_CAPACITY=15Gi \
                 -p BACKUP_VOLUME_SIZE=20Gi \
                 -p DB_NAME=moodle \
@@ -335,7 +335,7 @@ jobs:
               DB_PASSWORD=${{ secrets.DB_PASSWORD }}
               SSL_PROXY=true
               SITE_URL=https://moodle-950003-prod.apps.silver.devops.gov.bc.ca
-              DB_HOST=mysql-0.mysql
+              DB_HOST=db
               `EOF` "
           done
           export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
