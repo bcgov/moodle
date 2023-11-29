@@ -288,7 +288,6 @@ jobs:
                 -p SITE_URL=${APP_HOST} \
                 -p DB_HOST=db \
                 -p DB_SECONDARY_NAME=mysql-read \
-                -p MOODLE_MEMORY_LIMIT=4Gi \
                 -p PROJECT_NAMESPACE=950003-prod\
                 -p DB_SERVICE_NAME=db \
                 -p MOODLE_VOLUME_CAPACITY=15Gi \

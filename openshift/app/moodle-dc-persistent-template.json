@@ -216,12 +216,12 @@
                 ],
                 "resources": {
                   "limits": {
-                    "memory": "${MOODLE_MEMORY_LIMIT}",
-                    "cpu": "1500m"
+                    "memory": "0",
+                    "cpu": "0"
                   },
                   "requests": {
-                    "memory": "4Gi",
-                    "cpu": "1000m"
+                    "memory": "0",
+                    "cpu": "0"
                   }
                 },
                 "env": [
@@ -240,10 +240,6 @@
                   {
                     "name": "APACHE_DOCUMENT_ROOT",
                     "value": "${APACHE_DOCUMENT_ROOT}"
-                  },
-                  {
-                    "name": "MOODLE_MEMORY_LIMIT",
-                    "value": "${MOODLE_MEMORY_LIMIT}"
                   },
                   {
                     "name": "MOODLE_DATA_PATH",
@@ -446,13 +442,6 @@
       "displayName": "Image Stream Tag",
       "required": true,
       "name": "IMAGE_STREAM_TAG"
-    },
-    {
-      "description": "Maximum amount of memory the container can use.",
-      "displayName": "Memory Limit",
-      "name": "MOODLE_MEMORY_LIMIT",
-      "required": true,
-      "value": "${MOODLE_MEMORY_LIMIT}"
     },
     {
       "description": "Volume space available for Moodle application, e.g. 512Mi, 2Gi.",
