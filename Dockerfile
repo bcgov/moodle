@@ -2,7 +2,8 @@
 # Build intermediate container to handle Github token
 FROM aro.jfrog.io/moodle/php:8.2-apache as composer
 
-ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
+ENV APACHE_DOCUMENT_ROOT=/vendor/moodle/moodle
+ENV MOODLE_CONFIG_FILE=$APACHE_DOCUMENT_ROOT/config.php
 
 # Version control for Moodle and plugins
 ENV MOODLE_BRANCH_VERSION MOODLE_402_STABLE
@@ -54,27 +55,27 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 # Add plugins (try to add these via composer later)
 #RUN mkdir -p /vendor/moodle
 
-RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
+RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle $APACHE_DOCUMENT_ROOT
 
-RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
-    mkdir -p /vendor/moodle/moodle/admin/tool/dataflows && \
-    mkdir -p /vendor/moodle/moodle/mod/facetoface && \
-    mkdir -p /vendor/moodle/moodle/mod/hvp  && \
-    mkdir -p /vendor/moodle/moodle/course/format/topcoll  && \
-#    mkdir -p /vendor/moodle/moodle/mod/certificate  && \
-    mkdir -p /vendor/moodle/moodle/mod/customcert  && \
-    chown -R www-data:www-data /vendor/moodle/moodle/admin/tool/ && \
-    chown -R www-data:www-data /vendor/moodle/moodle/mod/ && \
-    chown -R www-data:www-data /vendor/moodle/moodle/course/format/
+RUN mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/trigger && \
+    mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
+    mkdir -p $APACHE_DOCUMENT_ROOT/mod/facetoface && \
+    mkdir -p $APACHE_DOCUMENT_ROOT/mod/hvp  && \
+    mkdir -p $APACHE_DOCUMENT_ROOT/course/format/topcoll  && \
+#    mkdir -p $APACHE_DOCUMENT_ROOT/mod/certificate  && \
+    mkdir -p $APACHE_DOCUMENT_ROOT/mod/customcert  && \
+    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/admin/tool/ && \
+    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/mod/ && \
+    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/course/format/
 
-RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger && \
-    git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows.git /vendor/moodle/moodle/admin/tool/dataflows && \
-    git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface && \
-    git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && \
-    git clone --recurse-submodules --jobs 8 --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll /vendor/moodle/moodle/course/format/topcoll && \
-    git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert /vendor/moodle/moodle/mod/customcert
-
-# git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate /vendor/moodle/moodle/mod/certificate
+RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_trigger $APACHE_DOCUMENT_ROOT/admin/tool/trigger && \
+    git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
+    git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface $APACHE_DOCUMENT_ROOT/mod/facetoface && \
+    git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp $APACHE_DOCUMENT_ROOT/mod/hvp && \
+    git clone --recurse-submodules --jobs 8 --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll $APACHE_DOCUMENT_ROOT/course/format/topcoll && \
+    git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert $APACHE_DOCUMENT_ROOT/mod/customcert && \
+    git clone --recurse-submodules --jobs 8 --branch main --single-branch https://github.com/bcgov/bcgovpsa-moodle $APACHE_DOCUMENT_ROOT/theme/bcgovpsa
+# git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate $APACHE_DOCUMENT_ROOT/mod/certificate
 
 # RUN git submodule update --init
 
@@ -94,7 +95,9 @@ ARG DB_NAME="moodle"
 ARG DB_PASSWORD=""
 ARG DB_USER="moodle"
 
-ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
+ENV APACHE_DOCUMENT_ROOT=/vendor/moodle/moodle
+ENV MOODLE_DATA_DIR=/vendor/moodle/moodledata
+ENV MOODLE_CONFIG_FILE=$APACHE_DOCUMENT_ROOT/config.php
 ENV VENDOR=/vendor/
 ENV COMPOSER_MEMORY_LIMIT=-1
 
@@ -213,40 +216,43 @@ COPY .env$ENV_FILE ./.env
 USER root
 
 # Use ONE of these - High Availability (-ha-readonly) or standard
-#COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
-COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
+#COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php $MOODLE_CONFIG_FILE
+COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php $MOODLE_CONFIG_FILE
 
 # Find/replace config values to make the file solid for CLI/Cron (not using ENV vars)
-RUN sed -i "s|DB_HOST|${DB_HOST}|" /vendor/moodle/moodle/config.php
-RUN sed -i "s|DB_NAME|${DB_NAME}|" /vendor/moodle/moodle/config.php
-RUN sed -i "s|DB_USER|${DB_USER}|" /vendor/moodle/moodle/config.php
-RUN sed -i "s|DB_PASSWORD|${DB_PASSWORD}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_HOST|${DB_HOST}|" $MOODLE_CONFIG_FILE
+RUN sed -i "s|DB_NAME|${DB_NAME}|" $MOODLE_CONFIG_FILE
+RUN sed -i "s|DB_USER|${DB_USER}|" $MOODLE_CONFIG_FILE
+RUN sed -i "s|DB_PASSWORD|${DB_PASSWORD}|" $MOODLE_CONFIG_FILE
 
 # COPY /app/config/sync/apache.conf /etc/apache2/sites-enabled/000-default.conf
 COPY --chown=www-data:www-data app/config/sync/apache/apache2.conf /etc/apache2/apache2.conf
 COPY --chown=www-data:www-data app/config/sync/apache/apache2-mods-available-mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 COPY --chown=www-data:www-data app/config/sync/apache/ports.conf /etc/apache2/ports.conf
-COPY --chown=www-data:www-data app/config/sync/apache/web-root.htaccess /vendor/moodle/moodle/.htaccess
+COPY --chown=www-data:www-data app/config/sync/apache/web-root.htaccess $APACHE_DOCUMENT_ROOT/.htaccess
 COPY --chown=www-data:www-data app/config/sync/moodle/php.ini-development /usr/local/etc/php/php.ini
 
 # Setup Permissions for www user
-RUN rm -rf /vendor/moodle/moodle/.htaccess && \
-    mkdir -p /vendor/moodle/moodledata/ && \
-    mkdir -p /vendor/moodle/moodledata/persistent && \
+RUN rm -rf $APACHE_DOCUMENT_ROOT/.htaccess && \
+    mkdir -p $MOODLE_DATA_DIR && \
+    mkdir -p $MOODLE_DATA_DIR/persistent && \
     if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle ; fi && \
-    if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodle/mod ; fi && \
-    if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data /vendor/moodle/moodledata/persistent ; fi && \
+    if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/mod ; fi && \
+    if [ "$ENV_FILE" != ".local" ] ; then chown -R www-data:www-data $MOODLE_DATA_DIR/persistent ; fi && \
     chgrp -R 0 ${APACHE_DOCUMENT_ROOT} && \
     chmod -R g=u ${APACHE_DOCUMENT_ROOT} && \
     chown -R www-data:www-data ${APACHE_DOCUMENT_ROOT} && \
-    chgrp -R 0 /vendor/moodle/moodledata/persistent && \
-    chmod -R g=u /vendor/moodle/moodledata/persistent && \
-    chown -R www-data:www-data /vendor/moodle/moodledata/persistent && \
+    chgrp -R 0 $MOODLE_DATA_DIR && \
+    chmod -R g=u $MOODLE_DATA_DIR && \
+    chown -R www-data:www-data $MOODLE_DATA_DIR && \
+    chgrp -R 0 $MOODLE_DATA_DIR/persistent && \
+    chmod -R g=u $MOODLE_DATA_DIR/persistent && \
+    chown -R www-data:www-data $MOODLE_DATA_DIR/persistent && \
     chgrp -R 0 /.env && \
     chmod -R g=u /.env && \
-    chown -R www-data:www-data /vendor/moodle/moodle/mod && \
-    chgrp -R 0 /vendor/moodle/moodle/mod && \
-    chmod -R g=u /vendor/moodle/moodle/mod && \
+    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/mod && \
+    chgrp -R 0 $APACHE_DOCUMENT_ROOT/mod && \
+    chmod -R g=u $APACHE_DOCUMENT_ROOT/mod && \
     mkdir -p /var/run/apache2 && \
     chown -R www-data:www-data /var/run/apache2 && \
     chgrp -R 0 /var/run/apache2 && \
