@@ -155,7 +155,7 @@
         }
       },
       "spec": {
-        "replicas": 3,
+        "replicas": 2,
         "selector": {
           "deploymentconfig": "${APP_NAME}"
         },
