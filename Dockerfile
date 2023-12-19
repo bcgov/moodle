@@ -261,5 +261,6 @@ RUN rm -rf $APACHE_DOCUMENT_ROOT/.htaccess && \
     chown -R www-data:www-data /var/log/apache2 && \
     chgrp -R 0 /var/log/apache2 && \
     chmod -R g=u /var/log/apache2
+    fc-cache -fv
 
 # ENTRYPOINT ["apachectl", "-D", "FOREGROUND"]
