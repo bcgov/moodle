@@ -7,12 +7,12 @@ ENV MOODLE_CONFIG_FILE=$APACHE_DOCUMENT_ROOT/config.php
 
 # Version control for Moodle and plugins
 ENV MOODLE_BRANCH_VERSION MOODLE_403_STABLE
-ENV F2F_BRANCH_VERSION MOODLE_400_STABLE
 ENV HVP_BRANCH_VERSION stable
-ENV FORMAT_BRANCH_VERSION MOODLE_402
-# ENV CERTIFICATE_BRANCH_VERSION MOODLE_31_STABLE
 ENV CUSTOMCERT_BRANCH_VERSION MOODLE_402_STABLE
-ENV DATAFLOWS_BRANCH_VERSION MOODLE_35_STABLE
+ENV DATAFLOWS_BRANCH_VERSION MOODLE_401_STABLE
+# ENV F2F_BRANCH_VERSION MOODLE_400_STABLE
+# ENV CERTIFICATE_BRANCH_VERSION MOODLE_31_STABLE
+# ENV FORMAT_BRANCH_VERSION MOODLE_402
 
 WORKDIR /
 
@@ -22,7 +22,7 @@ RUN apt-get update -y && \
 	dpkg --configure -a && \
 	apt-get -f install && \
 	apt-get install -y ssh-client && \
-    apt-get install -y zip && \
+	apt-get install -y zip && \
 	apt-get install -y git && \
 	apt-get install -o Dpkg::Options::="--force-confold" -y -q --no-install-recommends && apt-get clean -y \
 		ca-certificates \
@@ -57,25 +57,26 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 
 RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle $APACHE_DOCUMENT_ROOT
 
-RUN mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/trigger && \
-    mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
-    mkdir -p $APACHE_DOCUMENT_ROOT/mod/facetoface && \
+RUN mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
     mkdir -p $APACHE_DOCUMENT_ROOT/mod/hvp  && \
-    mkdir -p $APACHE_DOCUMENT_ROOT/course/format/topcoll  && \
-#    mkdir -p $APACHE_DOCUMENT_ROOT/mod/certificate  && \
     mkdir -p $APACHE_DOCUMENT_ROOT/mod/customcert  && \
     chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/admin/tool/ && \
-    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/mod/ && \
-    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/course/format/
+    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/mod/
+# mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/trigger && \
+# mkdir -p $APACHE_DOCUMENT_ROOT/mod/certificate  && \
+# mkdir -p $APACHE_DOCUMENT_ROOT/mod/facetoface && \
+# mkdir -p $APACHE_DOCUMENT_ROOT/course/format/topcoll  && \
+# chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/course/format/
 
-RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_trigger $APACHE_DOCUMENT_ROOT/admin/tool/trigger && \
-    git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
-    git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface $APACHE_DOCUMENT_ROOT/mod/facetoface && \
+RUN git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
     git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp $APACHE_DOCUMENT_ROOT/mod/hvp && \
-    git clone --recurse-submodules --jobs 8 --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll $APACHE_DOCUMENT_ROOT/course/format/topcoll && \
     git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert $APACHE_DOCUMENT_ROOT/mod/customcert && \
     git clone --recurse-submodules --jobs 8 --branch main --single-branch https://github.com/bcgov/bcgovpsa-moodle $APACHE_DOCUMENT_ROOT/theme/bcgovpsa
 # git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate $APACHE_DOCUMENT_ROOT/mod/certificate
+# git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface $APACHE_DOCUMENT_ROOT/mod/facetoface && \
+# git clone --recurse-submodules --jobs 8 --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll $APACHE_DOCUMENT_ROOT/course/format/topcoll && \
+# git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_trigger $APACHE_DOCUMENT_ROOT/admin/tool/trigger && \
+
 
 # RUN git submodule update --init
 
