@@ -11,7 +11,7 @@ ENV HVP_BRANCH_VERSION stable
 ENV FORMAT_BRANCH_VERSION MOODLE_311
 ENV CERTIFICATE_BRANCH_VERSION MOODLE_31_STABLE
 ENV CUSTOMCERT_BRANCH_VERSION MOODLE_311_STABLE
-ENV DATAFLOWS_BRANCH_VERSION MOODLE_35_STABLE-nestedloopfix
+ENV DATAFLOWS_BRANCH_VERSION MOODLE_35_STABLE
 
 WORKDIR /
 
@@ -183,6 +183,9 @@ RUN docker-php-ext-install mysqli && \
     docker-php-ext-enable zip && \
     docker-php-ext-configure intl && \
     docker-php-ext-configure gd --with-freetype --with-jpeg
+
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions
 
 RUN { \
 		echo 'opcache.enable_cli=1'; \
