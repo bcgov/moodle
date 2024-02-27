@@ -28,7 +28,6 @@ jobs:
   build:
     name: Build APP
     runs-on: ubuntu-latest
-    # if: ${{ github.event.pull_request.merged == true}}
     if: github.ref_name == 'dev' || github.ref_name  == 'test' || github.ref_name  == 'prod'
     env:
       BUILD_ID: ${{ github.event.number }}
@@ -37,7 +36,6 @@ jobs:
       BUILD_TAG: ${{ github.ref_name }}
       APP: moodle
       DB_BACKUP_APP: db-backup
-      #KC_AUTH_URL: https://dev.oidc.gov.bc.ca/auth/
     steps:
       # Checkout the PR branch
       - name: Print env
@@ -53,21 +51,6 @@ jobs:
       - name: Log in to OpenShift
         run: |
           oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
-  #     # # Build backup container
-  #     # - name: Build Backup image
-  #     #   working-directory: "./openshift/app"
-  #     #   run: |
-  #     #     oc -n ${BUILD_NAMESPACE} process -f docker-build.yml \
-  #     #     -p NAME=${DB_BACKUP_APP} \
-  #     #     -p TAG=${BUILD_TAG} \
-  #     #     -p BASE_IMAGE_NAME="mysql-57-centos7" \
-  #     #     -p BASE_IMAGE_TAG="5.7" \
-  #     #     -p BASE_IMAGE_REPO="aro.jfrog.io/moodle/" \
-  #     #     -p GITHUB_AUTH_TOKEN=${{secrets.AUTH_TOKEN}} \
-  #     #     -p SOURCE_REPOSITORY_URL="https://github.com/BCDevOps/backup-container.git" \
-  #     #     -p SOURCE_REPOSITORY_REF="master" \
-  #     #     -p SOURCE_CONTEXT_DIR="docker" | oc -n ${BUILD_NAMESPACE} apply -f -
-  #     #     oc -n ${BUILD_NAMESPACE} start-build bc/${DB_BACKUP_APP} --wait
 
       # Build the app images
       - name: Build App images
@@ -77,14 +60,20 @@ jobs:
           test -n "${BUILD_NAMESPACE}"
           echo "BUILIDING ${APP} with tag: ${BUILD_TAG}"
                 oc -n ${BUILD_NAMESPACE} process -f docker-build.yml \
-                -p TAG=${BUILD_TAG} -p SOURCE_REPOSITORY_REF=${BRANCH} \
-                -p BASE_IMAGE_NAME="php" -p BASE_IMAGE_TAG="7.4-apache" \
+                -p TAG=${BUILD_TAG} \
+                -p SOURCE_REPOSITORY_REF=${BRANCH} \
+                -p BASE_IMAGE_NAME="php" \
+                -p BASE_IMAGE_TAG="7.4-apache" \
+                -p SITE_URL="https://moodle-950003-${BUILD_TAG}.apps.silver.devops.gov.bc.ca" \
                 -p BASE_IMAGE_REPO="aro.jfrog.io/moodle/" \
-                -p GITHUB_AUTH_TOKEN=${{secrets.AUTH_TOKEN}} \
+                -p GITHUB_AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} \
+                -p DB_HOST="mysql-0.mysql" \
+                -p DB_PASSWORD="${{ secrets.DB_PASSWORD_ESCAPED }}" \
+                -p DB_USER="moodle" \
+                -p DB_NAME="moodle" \
                 -p SOURCE_CONTEXT_DIR=. \
                 -p NAME=${APP} | oc -n ${BUILD_NAMESPACE} apply -f -
           oc -n ${BUILD_NAMESPACE} start-build bc/${APP} --no-cache --wait
-
 
   # Deploy App images in Dev
   deployDev:
@@ -104,11 +93,6 @@ jobs:
     needs:
       - build
     steps:
-       # - name: Print env
-       #   run: |
-       #     echo BUILD ID: $BUILD_ID
-       #     echo BUILD NAMESPACE: $BUILD_NAMESPACE
-       #     echo BRANCH: $BRANCH
       - name: Checkout Target Branch
         uses: actions/checkout@v1
 
@@ -118,30 +102,6 @@ jobs:
       - name: Log in to OpenShift
         run: |
           oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
-      # - name: Deploy Backup container
-      #   run: |
-      #     test -n "${NAMESPACE}"
-      #     test -n "${BUILD_NAMESPACE}"
-      #     test -n "${BRANCH}"
-      #     echo "Current namespace is ${NAMESPACE}"
-      #     oc -n ${BUILD_NAMESPACE} policy add-role-to-group system:image-puller system:serviceaccounts:${NAMESPACE}
-      #     oc -n ${NAMESPACE} process -f openshift/app/db-backup-deploy.yml \
-      #     -p NAME=${DB_BACKUP_APP} \
-      #     -p IMAGE_STREAM_TAG=${DB_BACKUP_APP}:latest \
-      #     -p BUILD_NAMESPACE=${BUILD_NAMESPACE} \
-      #     -p DB_NAME=${DB_NAME}  | oc -n ${NAMESPACE} apply -f -
-      #     sleep 30
-      #     oc rollout latest dc/db-backup -n ${NAMESPACE}
-      #     # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
-      #     ATTEMPTS=0
-      #     ROLLOUT_STATUS_CMD="oc rollout status dc/db-backup -n ${NAMESPACE}"
-      #     until $ROLLOUT_STATUS_CMD || [ $ATTEMPTS -eq 60 ]; do
-      #       $ROLLOUT_STATUS_CMD
-      #       ATTEMPTS=$((attempts + 1))
-      #       sleep 10
-      #     done
-      #     oc project ${NAMESPACE}
-      #     echo "Listing pods.."
 
       - name: Deploy APP
         run: |
@@ -149,8 +109,7 @@ jobs:
           test -n "${BUILD_NAMESPACE}"
           test -n "${BRANCH}"
           echo "Current namespace is ${NAMESPACE}"
-          #oc -n ${BUILD_NAMESPACE} policy add-role-to-group system:image-puller system:serviceaccounts:${NAMESPACE}
-          oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template-new.json \
+          oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
                 -p DB_HOST=mysql-0.mysql \
@@ -219,11 +178,6 @@ jobs:
     needs:
       - build
     steps:
-       # - name: Print env
-       #   run: |
-       #     echo BUILD ID: $BUILD_ID
-       #     echo BUILD NAMESPACE: $BUILD_NAMESPACE
-       #     echo BRANCH: $BRANCH
       - name: Checkout Target Branch
         uses: actions/checkout@v1
 
@@ -233,40 +187,13 @@ jobs:
       - name: Log in to OpenShift
         run: |
           oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
-  #     - name: Deploy Backup container
-  #       run: |
-  #         test -n "${NAMESPACE}"
-  #         test -n "${BUILD_NAMESPACE}"
-  #         test -n "${BRANCH}"
-  #         echo "Current namespace is ${NAMESPACE}"
-  #         oc -n ${BUILD_NAMESPACE} policy add-role-to-group system:image-puller system:serviceaccounts:${NAMESPACE}
-  #         oc -n ${NAMESPACE} process -f openshift/app/db-backup-deploy.yml \
-  #         -p NAME=${DB_BACKUP_APP} \
-  #         -p IMAGE_STREAM_TAG=${DB_BACKUP_APP}:latest \
-  #         -p BUILD_NAMESPACE=${BUILD_NAMESPACE} \
-  #         -p DB_NAME=${DB_NAME}  | oc -n ${NAMESPACE} apply -f -
-  #         sleep 30
-  #         oc rollout latest dc/db-backup -n ${NAMESPACE}
-  #         # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
-  #         ATTEMPTS=0
-  #         ROLLOUT_STATUS_CMD="oc rollout status dc/db-backup -n ${NAMESPACE}"
-  #         until $ROLLOUT_STATUS_CMD || [ $ATTEMPTS -eq 60 ]; do
-  #           $ROLLOUT_STATUS_CMD
-  #           ATTEMPTS=$((attempts + 1))
-  #           sleep 10
-  #         done
-  #         oc project ${NAMESPACE}
-  #         echo "Listing pods.."
       - name: Deploy APP
         run: |
           test -n "${NAMESPACE}"
           test -n "${BUILD_NAMESPACE}"
           test -n "${BRANCH}"
           echo "Current namespace is ${NAMESPACE}"
-          #oc -n ${BUILD_NAMESPACE} policy add-role-to-group system:image-puller system:serviceaccounts:${NAMESPACE}
-          #oc policy add-role-to-group view system:serviceaccounts:950003-dev -n ${NAMESPACE}
-          #oc policy add-role-to-group edit system:serviceaccounts:950003-dev -n ${NAMESPACE}
-          oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template-new.json \
+          oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
                 -p DB_HOST=mysql-0.mysql \
@@ -309,12 +236,6 @@ jobs:
           oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name
           sleep 20
           podNames=$(oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name)
-          # cat <<EOF >> .env
-          # DB_PASSWORD="{{ secrets.DB_PASSWORD }}"
-          # SSL_PROXY=true
-          # SITE_URL="https://moodle-950003-test.apps.silver.devops.gov.bc.ca"
-          # DB_HOST="mysql-0.mysql"
-          # EOF
           pwd
           ls -lrt .env
           echo $podNames
@@ -329,8 +250,6 @@ jobs:
           done
           export ROUTE="$(oc get route moodle -o jsonpath='{.spec.host}')"
           echo "${APP} is exposed at 'https://'${ROUTE}"
-
-
 
   # Deploy App images in Prod
   deployProd:
@@ -350,11 +269,6 @@ jobs:
     needs:
       - build
     steps:
-       # - name: Print env
-       #   run: |
-       #     echo BUILD ID: $BUILD_ID
-       #     echo BUILD NAMESPACE: $BUILD_NAMESPACE
-       #     echo BRANCH: $BRANCH
       - name: Checkout Target Branch
         uses: actions/checkout@v1
 
@@ -364,38 +278,13 @@ jobs:
       - name: Log in to OpenShift
         run: |
           oc login --token=${{ secrets.SA_TOKEN }} --server=https://api.silver.devops.gov.bc.ca:6443
-      # - name: Deploy Backup container
-      #   run: |
-      #     test -n "${NAMESPACE}"
-      #     test -n "${BUILD_NAMESPACE}"
-      #     test -n "${BRANCH}"
-      #     echo "Current namespace is ${NAMESPACE}"
-      #     oc -n ${BUILD_NAMESPACE} policy add-role-to-group system:image-puller system:serviceaccounts:${NAMESPACE}
-      #     oc -n ${NAMESPACE} process -f openshift/app/db-backup-deploy.yml \
-      #     -p NAME=${DB_BACKUP_APP} \
-      #     -p IMAGE_STREAM_TAG=${DB_BACKUP_APP}:latest \
-      #     -p BUILD_NAMESPACE=${BUILD_NAMESPACE} \
-      #     -p DB_NAME=${DB_NAME}  | oc -n ${NAMESPACE} apply -f -
-      #     sleep 30
-      #     oc rollout latest dc/db-backup -n ${NAMESPACE}
-      #     # Check deployment rollout status every 10 seconds (max 10 minutes) until complete.
-      #     ATTEMPTS=0
-      #     ROLLOUT_STATUS_CMD="oc rollout status dc/db-backup -n ${NAMESPACE}"
-      #     until $ROLLOUT_STATUS_CMD || [ $ATTEMPTS -eq 60 ]; do
-      #       $ROLLOUT_STATUS_CMD
-      #       ATTEMPTS=$((attempts + 1))
-      #       sleep 10
-      #     done
-      #     oc project ${NAMESPACE}
-      #     echo "Listing pods.."
       - name: Deploy APP
         run: |
           test -n "${NAMESPACE}"
           test -n "${BUILD_NAMESPACE}"
           test -n "${BRANCH}"
           echo "Current namespace is ${NAMESPACE}"
-          #oc -n ${BUILD_NAMESPACE} policy add-role-to-group system:image-puller system:serviceaccounts:${NAMESPACE}
-          oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template-new.json \
+          oc -n ${NAMESPACE} process -f openshift/app/moodle-dc-persistent-template.json \
                 -p APP_NAME=${APP} \
                 -p SITE_URL=${APP_HOST} \
                 -p DB_HOST=mysql-0.mysql \
@@ -438,12 +327,6 @@ jobs:
           oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name
           sleep 20
           podNames=$(oc get pods -l deploymentconfig=moodle --field-selector=status.phase=Running -o name)
-          # cat <<EOF >> .env
-          # DB_PASSWORD="{{ secrets.DB_PASSWORD }}"
-          # SSL_PROXY=true
-          # SITE_URL="https://moodle-950003-prod.apps.silver.devops.gov.bc.ca"
-          # DB_HOST="mysql-0.mysql"
-          # EOF
           pwd
           ls -lrt .env
           echo $podNames
