@@ -67,7 +67,7 @@ RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     mkdir -p /vendor/moodle/moodle/local/psaelmsync  && \
     chown -R www-data:www-data /vendor/moodle/moodle/admin/tool/ && \
     chown -R www-data:www-data /vendor/moodle/moodle/mod/ && \
-    chown -R www-data:www-data /vendor/moodle/moodle/course/format/
+    chown -R www-data:www-data /vendor/moodle/moodle/course/format/ && \
     chown -R www-data:www-data /vendor/moodle/moodle/local/psaelmsync/
 
 RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-tool_trigger /vendor/moodle/moodle/admin/tool/trigger && \
@@ -76,7 +76,7 @@ RUN git clone --recurse-submodules --jobs 8 https://github.com/catalyst/moodle-t
     git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && \
     git clone --recurse-submodules --jobs 8 --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll /vendor/moodle/moodle/course/format/topcoll && \
     git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate /vendor/moodle/moodle/mod/certificate && \
-    git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert /vendor/moodle/moodle/mod/customcert
+    git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert /vendor/moodle/moodle/mod/customcert && \
     git clone --recurse-submodules --jobs 8 --branch $PSAELMSYNC_BRANCH_VERSION --single-branch https://github.com/bcgov/psaelmsync /vendor/moodle/moodle/local/psaelmsync
 
 # RUN git submodule update --init
