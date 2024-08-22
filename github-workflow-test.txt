@@ -12,7 +12,4 @@ Trigger build
 Kick to upgrade dataflows plugin
 Kick to upgrade dataflows plugin, again
 Kick to upgrade PSALS SYNC plugin
-...
-This one gon work
-This one gon work
-This is not a very fun way to work
+:)
