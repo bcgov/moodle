@@ -19,3 +19,4 @@ Completion and tweaks PSALSSync
 :D
 psalssync-tweak2
 psalssync-tweak3
+psalssync-tweak4
