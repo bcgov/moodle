@@ -23,3 +23,4 @@ psalssync-tweak4
 psalssync-tweak5
 psalssync-tweak6
 psalssync-emailformat1
+psalssync-emailformat2
