@@ -17,10 +17,4 @@ Kick to upgrade PSALS SYNC plugin
 ;)
 Completion and tweaks PSALSSync
 :D
-psalssync-tweak2
-psalssync-tweak3
-psalssync-tweak4
-psalssync-tweak5
 psalssync-tweak6
-psalssync-emailformat1
-psalssync-emailformat2
