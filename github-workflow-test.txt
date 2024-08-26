@@ -20,3 +20,4 @@ Completion and tweaks PSALSSync
 psalssync-tweak6
 psalssync-tweak7
 psalssync-tweak8
+psalssync-enroltableupdate
