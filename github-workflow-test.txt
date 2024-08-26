@@ -18,3 +18,4 @@ Kick to upgrade PSALS SYNC plugin
 Completion and tweaks PSALSSync
 :D
 psalssync-tweak6
+psalssync-tweak7
