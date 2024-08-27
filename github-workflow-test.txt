@@ -24,3 +24,4 @@ psalssync-enroltableupdate
 psalssync-enroltableupdate2
 psalssync-missedunderscoreyay
 psalssync-completion1
+psalssync-completion2
