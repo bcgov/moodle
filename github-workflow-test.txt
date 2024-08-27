@@ -28,3 +28,4 @@ psalssync-completion2
 psalssync-completion3
 psalssync-dashsplit1
 psalssync-dashsplit2
+psalssync-dashsplit3
