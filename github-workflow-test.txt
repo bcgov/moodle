@@ -17,15 +17,4 @@ Kick to upgrade PSALS SYNC plugin
 ;)
 Completion and tweaks PSALSSync
 :D
-psalssync-tweak6
-psalssync-tweak7
-psalssync-tweak8
-psalssync-enroltableupdate
-psalssync-enroltableupdate2
-psalssync-missedunderscoreyay
-psalssync-completion1
-psalssync-completion2
-psalssync-completion3
-psalssync-dashsplit1
-psalssync-dashsplit2
-psalssync-dashsplit3
+psalssync-dashsplit4
