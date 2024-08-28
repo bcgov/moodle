@@ -20,3 +20,4 @@ Completion and tweaks PSALSSync
 psalssync-dashsplit4
 psalssync-dashsplit5000
 psalssync-dashsplit6
+psalssync-dashsplit7
