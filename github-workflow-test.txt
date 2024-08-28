@@ -17,7 +17,4 @@ Kick to upgrade PSALS SYNC plugin
 ;)
 Completion and tweaks PSALSSync
 :D
-psalssync-dashsplit4
-psalssync-dashsplit5000
-psalssync-dashsplit6
-psalssync-dashsplit7
+psalssync-lockdown
