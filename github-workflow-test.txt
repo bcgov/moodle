@@ -19,3 +19,4 @@ Completion and tweaks PSALSSync
 :D
 psalssync-lockdown
 psalssync-coursedash
+psalssync-settingoops
