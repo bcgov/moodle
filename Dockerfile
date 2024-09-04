@@ -64,6 +64,7 @@ RUN mkdir -p /vendor/moodle/moodle/admin/tool/trigger && \
     mkdir -p /vendor/moodle/moodle/course/format/topcoll  && \
     mkdir -p /vendor/moodle/moodle/mod/certificate  && \
     mkdir -p /vendor/moodle/moodle/mod/customcert  && \
+    mkdir -p /vendor/moodle/moodle/local/psaelmsync  && \
     chown -R www-data:www-data /vendor/moodle/moodle/admin/tool/ && \
     chown -R www-data:www-data /vendor/moodle/moodle/mod/ && \
     chown -R www-data:www-data /vendor/moodle/moodle/course/format/ && \
