@@ -72,7 +72,7 @@ RUN mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
 
 RUN git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
     git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert $APACHE_DOCUMENT_ROOT/mod/customcert && \
-    git clone --recurse-submodules --jobs 8 --branch main --single-branch https://github.com/bcgov/bcgovpsa-moodle $APACHE_DOCUMENT_ROOT/theme/bcgovpsa
+    git clone --recurse-submodules --jobs 8 --branch main --single-branch https://github.com/bcgov/bcgovpsa-moodle $APACHE_DOCUMENT_ROOT/theme/bcgovpsa && \
     git clone --recurse-submodules --jobs 8 --branch main --single-branch https://github.com/bcgov/psaelmsync $APACHE_DOCUMENT_ROOT/local/psaelmsync
 # git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp $APACHE_DOCUMENT_ROOT/mod/hvp && \
 # git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate $APACHE_DOCUMENT_ROOT/mod/certificate
