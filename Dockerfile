@@ -59,8 +59,10 @@ RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --si
 
 RUN mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
     mkdir -p $APACHE_DOCUMENT_ROOT/mod/customcert  && \
+    mkdir -p $APACHE_DOCUMENT_ROOT/local/psaelmsync  && \
     chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/admin/tool/ && \
-    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/mod/
+    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/mod/ && \
+    chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/local/psaelmsync
 # mkdir -p $APACHE_DOCUMENT_ROOT/mod/hvp  && \
 # mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/trigger && \
 # mkdir -p $APACHE_DOCUMENT_ROOT/mod/certificate  && \
@@ -71,6 +73,7 @@ RUN mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
 RUN git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
     git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert $APACHE_DOCUMENT_ROOT/mod/customcert && \
     git clone --recurse-submodules --jobs 8 --branch main --single-branch https://github.com/bcgov/bcgovpsa-moodle $APACHE_DOCUMENT_ROOT/theme/bcgovpsa
+    git clone --recurse-submodules --jobs 8 --branch main --single-branch https://github.com/bcgov/psaelmsync $APACHE_DOCUMENT_ROOT/local/psaelmsync
 # git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp $APACHE_DOCUMENT_ROOT/mod/hvp && \
 # git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate $APACHE_DOCUMENT_ROOT/mod/certificate
 # git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface $APACHE_DOCUMENT_ROOT/mod/facetoface && \
