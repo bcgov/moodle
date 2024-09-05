@@ -21,3 +21,4 @@ psalssync-lockdown
 psalssync-coursedash
 psalssync-settingoops
 psalssync-coursedash2
+psalssync-existing
