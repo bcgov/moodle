@@ -18,3 +18,4 @@ Kick to upgrade dataflows plugin to latest and moodle point release
 psals-sync-existing1
 psals-sync-existing2
 psals-sync-idnumbers
+psals-sync-id4real
