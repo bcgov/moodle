@@ -20,3 +20,4 @@ psals-sync-existing2
 psals-sync-idnumbers
 psals-sync-id4real
 psals-sync-log1
+psals-sync-log2
