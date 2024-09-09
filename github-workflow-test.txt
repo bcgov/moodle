@@ -21,3 +21,4 @@ psals-sync-idnumbers
 psals-sync-id4real
 psals-sync-log1
 psals-sync-log2
+psals-sync-log3
