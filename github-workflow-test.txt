@@ -22,3 +22,4 @@ psals-sync-id4real
 psals-sync-log1
 psals-sync-log2
 psals-sync-log3
+psals-sync-log4
