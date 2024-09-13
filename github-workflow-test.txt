@@ -25,3 +25,4 @@ psals-sync-log3
 psals-sync-log4
 psals-sync-log5000
 psals-sync-log5001
+psals-sync-manual1
