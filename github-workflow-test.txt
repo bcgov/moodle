@@ -1,23 +1,2 @@
 #Frequent Changes will be made in this file to test GA workflow
-1. Test email notification on successful run
-2. Test installation of package mysqli
-3. Running build to test GA
-4. Add new line
-5.Add another line
-Another test run
-Test another build
-Test new changes
-Run the latest build
-Trigger build
-Kick to upgrade dataflows plugin
-Kick to upgrade dataflows plugin, again
-Kick to upgrade dataflows plugin
-again
-Kick to upgrade dataflows plugin
-Kick to update dataflows plugin
-Into dev branch this time
-Kick to update dataflows plugin to get PR740 changes so that v4 timestamp check flow works
-Kick to update dataflows plugin 
-Kick to update dataflows plugin test PHP 8
-ELMooBridge-100
-ELMooBridge-101
+psalselmsync-emailmismatch1
