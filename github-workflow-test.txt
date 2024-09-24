@@ -19,3 +19,4 @@ Completion and tweaks PSALSSync
 :D
 psalssync-emailverify1
 psalssync-emailverify2
+psalssync-emailverify3
