@@ -18,3 +18,4 @@ Kick to upgrade PSALS SYNC plugin
 Completion and tweaks PSALSSync
 :D
 psalssync-emailverify1
+psalssync-emailverify2
