@@ -17,15 +17,4 @@ Kick to upgrade PSALS SYNC plugin
 ;)
 Completion and tweaks PSALSSync
 :D
-psalssync-lockdown
-psalssync-coursedash
-psalssync-settingoops
-psalssync-coursedash2
-psalssync-existing
-psalssync-existing1
-psalssync-existing2logs
-psalssync-existing2logs2
-psalssync-existing2logs3
-psalssync-reenrolactive1
-psalssync-reenrolactive2
-psalssync-reenrolactive3
+psalssync-emailverify1
