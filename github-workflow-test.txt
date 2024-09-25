@@ -1,24 +1,2 @@
 #Frequent Changes will be made in this file to test GA workflow
-1. Test email notification on successful run
-2. Test installation of package mysqli
-3. Running build to test GA
-4. Add new line
-5.Add another line
-Another test run
-Test another build
-Test new changes
-Run the latest build
-Trigger build
-Kick to upgrade dataflows plugin
-Kick to upgrade dataflows plugin, again
-Kick to upgrade PSALS SYNC plugin
-:)
-:)
-;)
-Completion and tweaks PSALSSync
-:D
-psalssync-emailverify1
-psalssync-emailverify2
-psalssync-emailverify3
-psalssync-emailverify5
-psalssync-emailverify6
+psalselmsync-manualintake4
