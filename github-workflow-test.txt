@@ -28,3 +28,4 @@ psals-sync-log5001
 psals-sync-manual1
 psals-sync-manual2
 psalssync-reenrolactive1
+psalselmsync-manualintake5000
