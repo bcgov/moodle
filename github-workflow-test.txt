@@ -30,3 +30,4 @@ psals-sync-manual2
 psalssync-reenrolactive1
 psalselmsync-manualintake5000
 psalselmsync-manualintake5001
+psalselmsync-manualintake5002
