@@ -7,3 +7,4 @@ psalselmsync-manualintake2
 psalselmsync-manualintake3
 psalselmsync-manualintake4
 psalselmsync-morelogs
+psalselmsync-morelogs2
