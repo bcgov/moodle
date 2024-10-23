@@ -8,7 +8,7 @@ ENV MOODLE_CONFIG_FILE=$APACHE_DOCUMENT_ROOT/config.php
 # Version control for Moodle and plugins
 ENV MOODLE_BRANCH_VERSION MOODLE_405_STABLE
 ENV CUSTOMCERT_BRANCH_VERSION MOODLE_402_STABLE
-ENV DATAFLOWS_BRANCH_VERSION MOODLE_401_STABLE
+# ENV DATAFLOWS_BRANCH_VERSION MOODLE_401_STABLE
 # ENV HVP_BRANCH_VERSION stable
 # ENV F2F_BRANCH_VERSION MOODLE_400_STABLE
 # ENV CERTIFICATE_BRANCH_VERSION MOODLE_31_STABLE
@@ -56,9 +56,8 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 #RUN mkdir -p /vendor/moodle
 
 RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle $APACHE_DOCUMENT_ROOT
-
-RUN mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
-    mkdir -p $APACHE_DOCUMENT_ROOT/mod/customcert  && \
+# mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
+RUN mkdir -p $APACHE_DOCUMENT_ROOT/mod/customcert  && \
     mkdir -p $APACHE_DOCUMENT_ROOT/local/psaelmsync  && \
     chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/admin/tool/ && \
     chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/mod/ && \
@@ -69,9 +68,8 @@ RUN mkdir -p $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
 # mkdir -p $APACHE_DOCUMENT_ROOT/mod/facetoface && \
 # mkdir -p $APACHE_DOCUMENT_ROOT/course/format/topcoll  && \
 # chown -R www-data:www-data $APACHE_DOCUMENT_ROOT/course/format/
-
-RUN git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
-    git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert $APACHE_DOCUMENT_ROOT/mod/customcert && \
+# git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows $APACHE_DOCUMENT_ROOT/admin/tool/dataflows && \
+RUN git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert $APACHE_DOCUMENT_ROOT/mod/customcert && \
     git clone --recurse-submodules --jobs 8 --branch main --single-branch https://github.com/bcgov/bcgovpsa-moodle $APACHE_DOCUMENT_ROOT/theme/bcgovpsa && \
     git clone --recurse-submodules --jobs 8 --branch morelogs --single-branch https://github.com/bcgov/psaelmsync $APACHE_DOCUMENT_ROOT/local/psaelmsync
 # git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp $APACHE_DOCUMENT_ROOT/mod/hvp && \
