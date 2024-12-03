@@ -11,7 +11,6 @@ ENV HVP_BRANCH_VERSION stable
 ENV FORMAT_BRANCH_VERSION MOODLE_311
 ENV CERTIFICATE_BRANCH_VERSION MOODLE_31_STABLE
 ENV CUSTOMCERT_BRANCH_VERSION MOODLE_311_STABLE
-ENV DATAFLOWS_BRANCH_VERSION MOODLE_35_STABLE
 ENV PSAELMSYNC_BRANCH_VERSION main
 
 WORKDIR /
@@ -57,8 +56,7 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 
 RUN git clone --recurse-submodules --jobs 8 --branch $MOODLE_BRANCH_VERSION --single-branch https://github.com/moodle/moodle /vendor/moodle/moodle
 
-RUN mkdir -p /vendor/moodle/moodle/admin/tool/dataflows && \
-    mkdir -p /vendor/moodle/moodle/mod/facetoface && \
+RUN mkdir -p /vendor/moodle/moodle/mod/facetoface && \
     mkdir -p /vendor/moodle/moodle/mod/hvp  && \
     mkdir -p /vendor/moodle/moodle/course/format/topcoll  && \
     mkdir -p /vendor/moodle/moodle/mod/certificate  && \
@@ -69,8 +67,7 @@ RUN mkdir -p /vendor/moodle/moodle/admin/tool/dataflows && \
     chown -R www-data:www-data /vendor/moodle/moodle/course/format/ && \
     chown -R www-data:www-data /vendor/moodle/moodle/local/psaelmsync/
 
-RUN git clone --recurse-submodules --jobs 8 --branch $DATAFLOWS_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-tool_dataflows.git /vendor/moodle/moodle/admin/tool/dataflows && \
-    git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface && \
+RUN git clone --recurse-submodules --jobs 8 --branch $F2F_BRANCH_VERSION --single-branch https://github.com/catalyst/moodle-mod_facetoface /vendor/moodle/moodle/mod/facetoface && \
     git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && \
     git clone --recurse-submodules --jobs 8 --branch $FORMAT_BRANCH_VERSION --single-branch https://github.com/gjb2048/moodle-format_topcoll /vendor/moodle/moodle/course/format/topcoll && \
     git clone --recurse-submodules --jobs 8 --branch $CERTIFICATE_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_certificate /vendor/moodle/moodle/mod/certificate && \
