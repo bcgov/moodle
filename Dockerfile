@@ -1,14 +1,15 @@
 # syntax = docker/dockerfile:1.2
 # Build intermediate container to handle Github token
-FROM aro.jfrog.io/moodle/php:7.4-apache as composer
+FROM php:7.4-apache as composer
 
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 
 # Version control for Moodle and plugins
-ENV MOODLE_BRANCH_VERSION MOODLE_311_STABLE
+ENV MOODLE_BRANCH_VERSION MOODLE_401_STABLE
 ENV HVP_BRANCH_VERSION stable
-ENV CUSTOMCERT_BRANCH_VERSION MOODLE_311_STABLE
+ENV CUSTOMCERT_BRANCH_VERSION MOODLE_401_STABLE
 ENV PSAELMSYNC_BRANCH_VERSION main
+ENV CHILDTHEME_BRANCH_VERSION main
 
 WORKDIR /
 
@@ -61,7 +62,8 @@ RUN mkdir -p /vendor/moodle/moodle/mod/hvp  && \
 
 RUN git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && \
     git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION --single-branch https://github.com/mdjnelson/moodle-mod_customcert /vendor/moodle/moodle/mod/customcert && \
-    git clone --recurse-submodules --jobs 8 --branch $PSAELMSYNC_BRANCH_VERSION --single-branch https://github.com/bcgov/psaelmsync /vendor/moodle/moodle/local/psaelmsync
+    git clone --recurse-submodules --jobs 8 --branch $PSAELMSYNC_BRANCH_VERSION --single-branch https://github.com/bcgov/psaelmsync /vendor/moodle/moodle/local/psaelmsync && \
+    git clone --recurse-submodules --jobs 8 --branch $CHILDTHEME_BRANCH_VERSION --single-branch https://github.com/bcgov/bcgovpsa-moodle /vendor/moodle/moodle/theme/bcgovpsa
 
 # RUN git submodule update --init
 
