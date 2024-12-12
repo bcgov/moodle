@@ -3,3 +3,4 @@ psalselmsync-manualintake4
 psalselmsync-oauth2method
 psalselmsync-oauth2methodwth
 update theme
+update theme
