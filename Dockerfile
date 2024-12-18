@@ -8,6 +8,7 @@ ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 ENV MOODLE_BRANCH_VERSION MOODLE_401_STABLE
 ENV HVP_BRANCH_VERSION stable
 ENV PSAELMSYNC_BRANCH_VERSION main
+ENV CHILDTHEME_BRANCH_VERSION main
 
 WORKDIR /
 
@@ -57,7 +58,8 @@ RUN mkdir -p /vendor/moodle/moodle/mod/hvp  && \
     chown -R www-data:www-data /vendor/moodle/moodle/local/psaelmsync/
 
 RUN git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --single-branch https://github.com/h5p/moodle-mod_hvp /vendor/moodle/moodle/mod/hvp && \
-    git clone --recurse-submodules --jobs 8 --branch $PSAELMSYNC_BRANCH_VERSION --single-branch https://github.com/bcgov/psaelmsync /vendor/moodle/moodle/local/psaelmsync
+    git clone --recurse-submodules --jobs 8 --branch $PSAELMSYNC_BRANCH_VERSION --single-branch https://github.com/bcgov/psaelmsync /vendor/moodle/moodle/local/psaelmsync && \ 
+    git clone --recurse-submodules --jobs 8 --branch $CHILDTHEME_BRANCH_VERSION --single-branch https://github.com/bcgov/bcgovpsa-moodle /vendor/moodle/moodle/theme/bcgovpsa
 
 # RUN git submodule update --init
 
