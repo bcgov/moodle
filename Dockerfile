@@ -1,11 +1,11 @@
 # syntax = docker/dockerfile:1.2
 # Build intermediate container to handle Github token
-FROM aro.jfrog.io/moodle/php:7.4-apache as composer
+FROM php:7.4-apache as composer
 
 ENV APACHE_DOCUMENT_ROOT /vendor/moodle/moodle
 
 # Version control for Moodle and plugins
-ENV MOODLE_BRANCH_VERSION MOODLE_311_STABLE
+ENV MOODLE_BRANCH_VERSION MOODLE_401_STABLE
 ENV HVP_BRANCH_VERSION stable
 ENV PSAELMSYNC_BRANCH_VERSION main
 
@@ -67,7 +67,7 @@ RUN git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --singl
 
 
 # Build Moodle image
-FROM aro.jfrog.io/moodle/php:7.4-apache as moodle
+FROM php:7.4-apache as moodle
 
 ARG CONTAINER_PORT=8080
 ARG ENV_FILE=""
