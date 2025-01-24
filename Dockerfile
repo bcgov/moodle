@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 # Build intermediate container to handle Github token
-FROM aro.jfrog.io/moodle/php:8.2-apache as composer
+FROM php:8.2-apache as composer
 
 ENV APACHE_DOCUMENT_ROOT=/vendor/moodle/moodle
 ENV MOODLE_CONFIG_FILE=$APACHE_DOCUMENT_ROOT/config.php
@@ -87,7 +87,7 @@ RUN git clone --recurse-submodules --jobs 8 --branch $CUSTOMCERT_BRANCH_VERSION 
 
 
 # Build Moodle image
-FROM aro.jfrog.io/moodle/php:8.2-apache as moodle
+FROM php:8.2-apache as moodle
 
 ARG CONTAINER_PORT=8080
 ARG ENV_FILE=""
