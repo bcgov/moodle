@@ -72,7 +72,7 @@ RUN git clone --recurse-submodules --jobs 8 --branch $HVP_BRANCH_VERSION --singl
 
 
 # Build Moodle image
-FROM aro.jfrog.io/moodle/php:7.4-apache as moodle
+FROM php:7.4-apache as moodle
 
 ARG CONTAINER_PORT=8080
 ARG ENV_FILE=""
