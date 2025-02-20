@@ -4,3 +4,4 @@ psalselmsync-oauth2method
 psalselmsync-oauth2methodwth
 update theme
 update theme
+Kick to get new sort code for bridge plugin
