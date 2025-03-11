@@ -199,6 +199,12 @@ USER root
 #COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config-no-composer.php /vendor/moodle/moodle/config.php
 COPY --chown=www-data:www-data app/config/sync/moodle/moodle-config.php /vendor/moodle/moodle/config.php
 
+# Find/replace config values to make the file solid for CLI/Cron (not using ENV vars)
+RUN sed -i "s|DB_HOST|${DB_HOST}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_NAME|${DB_NAME}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_USER|${DB_USER}|" /vendor/moodle/moodle/config.php
+RUN sed -i "s|DB_PASSWORD|${DB_PASSWORD}|" /vendor/moodle/moodle/config.php
+
 # COPY /app/config/sync/apache.conf /etc/apache2/sites-enabled/000-default.conf
 COPY --chown=www-data:www-data app/config/sync/apache2.conf /etc/apache2/apache2.conf
 COPY --chown=www-data:www-data app/config/sync/ports.conf /etc/apache2/ports.conf
