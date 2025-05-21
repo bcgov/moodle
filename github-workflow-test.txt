@@ -12,3 +12,4 @@ Kick for enrolment ID implement in manual intake
 Kick for enrolment ID fix completion
 Kick for enrolment ID fix send right EID
 enrolid-complete-2
+enrolid-complete-3
