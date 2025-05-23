@@ -4,3 +4,4 @@ psalselmsync-oauth2method1
 psalselmsync-oauth2method2
 kick to get new enrol bridge sorting code
 enrolid-complete-5
+enrolid-complete-6-remove-record_comp_id
